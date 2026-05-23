@@ -1,19 +1,28 @@
 import os
 from pathlib import Path
 
-_SECRETS_FILE = Path(r"B:\secrets\revenant-relay.env")
+_DEFAULT_SECRETS_FILE = Path("config/secrets.env")
+_SECRETS_ENV_VAR = "RR_SECRETS_FILE"
+
+
+def _secrets_file_path():
+    configured = os.getenv(_SECRETS_ENV_VAR)
+    if configured:
+        return Path(configured).expanduser()
+    return _DEFAULT_SECRETS_FILE
 
 
 def load_secrets():
     """
-    Load secrets from B:\\secrets\\revenant-relay.env into os.environ.
-    Fails silently if B: is not mounted or the file doesn't exist — adapters
+    Load secrets from RR_SECRETS_FILE or default config/secrets.env into os.environ.
+    Fails silently if the file doesn't exist — adapters
     will fall back to the simulator when credentials are missing.
     """
-    if not _SECRETS_FILE.exists():
+    secrets_file = _secrets_file_path()
+    if not secrets_file.exists():
         return
 
-    with _SECRETS_FILE.open("r", encoding="utf-8") as f:
+    with secrets_file.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):

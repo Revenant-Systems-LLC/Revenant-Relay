@@ -39,8 +39,23 @@ Revenant-Relay/
 ```
 
 ## Status
-v0.0 — scaffolded. Engine not yet written.
+Core engine is implemented and runnable from local JSON config/state files.
 
+## Installation
+```
+python -m pip install -r requirements.txt
+python -m playwright install
+```
+
+
+## Reddit adapter environment
+Set these environment variables for Reddit adapter initialization/posting:
+- `RR_REDDIT_CLIENT_ID`
+- `RR_REDDIT_CLIENT_SECRET`
+- `RR_REDDIT_USERNAME`
+- `RR_REDDIT_PASSWORD`
+- `RR_REDDIT_USER_AGENT`
+- Optional: `RR_REDDIT_REFRESH_TOKEN`
 
 ## Pinterest adapter environment
 Set these environment variables for real Pinterest posting:

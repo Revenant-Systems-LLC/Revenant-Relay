@@ -149,6 +149,17 @@ def run(mode):
         consecutive_failures += 1
 
     run_log["ended_at"] = datetime.now().isoformat(timespec="seconds")
+
+    mode_settings = settings.get(f"{mode}_mode", {})
+    if mode_settings.get("send_email_report"):
+        run_log["email_report"] = send_email_report(run_log, settings, mode)
+    else:
+        run_log["email_report"] = {
+            "attempted": False,
+            "sent": False,
+            "reason": "disabled",
+        }
+
     append_run(run_log)
     json_path = write_run_json(run_log)
     txt_path = write_report_txt(run_log)
@@ -158,12 +169,8 @@ def run(mode):
     print(f"Run log: {json_path}")
     print(f"Report:  {txt_path}")
 
-    mode_settings = settings.get(f"{mode}_mode", {})
-    if mode_settings.get("send_email_report"):
-        send_email_report(run_log, settings, mode)
-
     email_status = run_log.get("email_report", {})
-    if email_status.get("enabled"):
+    if email_status.get("attempted"):
         if email_status.get("sent"):
             print("[Email] Report status: sent")
         else:

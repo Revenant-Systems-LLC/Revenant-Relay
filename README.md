@@ -53,3 +53,10 @@ Set these environment variables for TikTok adapter initialization:
 - `RR_TIKTOK_USERNAME`
 - `RR_TIKTOK_PASSWORD`
 - Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)
+
+## LinkedIn adapter environment
+Set these environment variables for real LinkedIn posting:
+- `RR_LINKEDIN_USERNAME`
+- `RR_LINKEDIN_PASSWORD`
+- `RR_LINKEDIN_POST_TARGET` (`company` or `profile`; `company` recommended)
+- `RR_LINKEDIN_COMPANY_PAGE_URL` (required when target is `company`)

@@ -44,7 +44,9 @@
   },
   "linkedin": {
     "username_env_var": "RR_LINKEDIN_USERNAME",
-    "password_env_var": "RR_LINKEDIN_PASSWORD"
+    "password_env_var": "RR_LINKEDIN_PASSWORD",
+    "post_target_env_var": "RR_LINKEDIN_POST_TARGET",
+    "company_page_url_env_var": "RR_LINKEDIN_COMPANY_PAGE_URL"
   },
   "x": {
     "username_env_var": "RR_X_USERNAME",

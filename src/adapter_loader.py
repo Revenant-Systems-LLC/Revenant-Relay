@@ -18,6 +18,13 @@ def load_adapter(platform, settings):
         except RuntimeError as e:
             print(f"[Adapter] Pinterest unavailable: {e}. Falling back to simulator.")
             return None
+    if platform == "linkedin":
+        try:
+            from .platforms.linkedin import LinkedInAdapter
+            return LinkedInAdapter(settings.get("linkedin", {}), settings)
+        except RuntimeError as e:
+            print(f"[Adapter] LinkedIn unavailable: {e}. Falling back to simulator.")
+            return None
     if platform == "tiktok":
         try:
             from .platforms.tiktok import TikTokAdapter

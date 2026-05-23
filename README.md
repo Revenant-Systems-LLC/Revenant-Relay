@@ -54,7 +54,6 @@ Set these environment variables for TikTok adapter initialization:
 - `RR_TIKTOK_PASSWORD`
 - Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)
 
-
 ## Snapchat adapter environment
 Set these environment variables for Snapchat adapter initialization:
 - `RR_SNAPCHAT_USERNAME`
@@ -63,3 +62,15 @@ Set these environment variables for Snapchat adapter initialization:
 - Optional: `RR_SNAPCHAT_BUSINESS_URL` (defaults to `https://ads.snapchat.com`)
 
 The adapter targets Snapchat Ads Manager campaign creation/save/publish controls when detectable. It does **not** claim reliable personal-story posting from Snapchat web account flow.
+
+## LinkedIn adapter environment
+Set these environment variables for real LinkedIn posting:
+- `RR_LINKEDIN_USERNAME`
+- `RR_LINKEDIN_PASSWORD`
+- `RR_LINKEDIN_POST_TARGET` (`company` or `profile`; `company` recommended)
+- `RR_LINKEDIN_COMPANY_PAGE_URL` (required when target is `company`)
+
+## X adapter environment
+Set these environment variables for real X posting:
+- `RR_X_USERNAME`
+- `RR_X_PASSWORD`

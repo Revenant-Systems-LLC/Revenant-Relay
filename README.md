@@ -40,3 +40,11 @@ Revenant-Relay/
 
 ## Status
 v0.0 — scaffolded. Engine not yet written.
+
+
+## Pinterest adapter environment
+Set these environment variables for real Pinterest posting:
+- `RR_PINTEREST_USERNAME`
+- `RR_PINTEREST_PASSWORD`
+- Optional: `RR_PINTEREST_BOARD_NAME`
+

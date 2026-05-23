@@ -53,3 +53,13 @@ Set these environment variables for TikTok adapter initialization:
 - `RR_TIKTOK_USERNAME`
 - `RR_TIKTOK_PASSWORD`
 - Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)
+
+
+## Snapchat adapter environment
+Set these environment variables for Snapchat adapter initialization:
+- `RR_SNAPCHAT_USERNAME`
+- `RR_SNAPCHAT_PASSWORD`
+- Optional: `RR_SNAPCHAT_POST_TARGET` (destination URL used in ad composer fields when present)
+- Optional: `RR_SNAPCHAT_BUSINESS_URL` (defaults to `https://ads.snapchat.com`)
+
+The adapter targets Snapchat Ads Manager campaign creation/save/publish controls when detectable. It does **not** claim reliable personal-story posting from Snapchat web account flow.

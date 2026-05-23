@@ -25,4 +25,11 @@ def load_adapter(platform, settings):
         except RuntimeError as e:
             print(f"[Adapter] TikTok unavailable: {e}. Falling back to simulator.")
             return None
+    if platform == "snapchat":
+        try:
+            from .platforms.snapchat import SnapchatAdapter
+            return SnapchatAdapter(settings.get("snapchat", {}), settings)
+        except RuntimeError as e:
+            print(f"[Adapter] Snapchat unavailable: {e}. Falling back to simulator.")
+            return None
     return None

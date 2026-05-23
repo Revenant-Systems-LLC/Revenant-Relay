@@ -9,13 +9,13 @@
     "x": {
       "enabled": true,
       "adapter": "x",
-      "simulated_success_rate": 0.80,
+      "simulated_success_rate": 0.8,
       "notes": "Recommended second adapter."
     },
     "facebook": {
       "enabled": true,
       "adapter": "facebook",
-      "simulated_success_rate": 0.60,
+      "simulated_success_rate": 0.6,
       "notes": "Higher anti-bot friction. Personal feed only, no groups in v1."
     },
     "instagram": {
@@ -27,7 +27,7 @@
     "reddit": {
       "enabled": true,
       "adapter": "reddit",
-      "simulated_success_rate": 0.40,
+      "simulated_success_rate": 0.4,
       "notes": "Subreddit rules vary wildly. Risk of bans for promotional content."
     },
     "pinterest": {
@@ -39,14 +39,20 @@
     "tiktok": {
       "enabled": true,
       "adapter": "tiktok",
-      "simulated_success_rate": 0.50,
+      "simulated_success_rate": 0.5,
       "notes": "Video-first. Static image ads will underperform."
     },
     "indeed": {
       "enabled": true,
       "adapter": "indeed",
-      "simulated_success_rate": 0.70,
+      "simulated_success_rate": 0.7,
       "notes": "Job board. Different format from social. May need separate ad pool."
+    },
+    "snapchat": {
+      "enabled": true,
+      "adapter": "snapchat",
+      "simulated_success_rate": 0.45,
+      "notes": "Business/Ads Manager flow only; personal story posting is not reliably web-automatable."
     }
   }
 }

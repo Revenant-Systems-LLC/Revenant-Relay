@@ -1,0 +1,52 @@
+{
+  "platforms": {
+    "linkedin": {
+      "enabled": true,
+      "adapter": "linkedin",
+      "simulated_success_rate": 0.85,
+      "notes": "Recommended first real adapter. Lower anti-bot friction than visual platforms."
+    },
+    "x": {
+      "enabled": true,
+      "adapter": "x",
+      "simulated_success_rate": 0.80,
+      "notes": "Recommended second adapter."
+    },
+    "facebook": {
+      "enabled": true,
+      "adapter": "facebook",
+      "simulated_success_rate": 0.60,
+      "notes": "Higher anti-bot friction. Personal feed only, no groups in v1."
+    },
+    "instagram": {
+      "enabled": true,
+      "adapter": "instagram",
+      "simulated_success_rate": 0.55,
+      "notes": "Media-heavy. Requires square or vertical images."
+    },
+    "reddit": {
+      "enabled": true,
+      "adapter": "reddit",
+      "simulated_success_rate": 0.40,
+      "notes": "Subreddit rules vary wildly. Risk of bans for promotional content."
+    },
+    "pinterest": {
+      "enabled": true,
+      "adapter": "pinterest",
+      "simulated_success_rate": 0.75,
+      "notes": "Visual platform. Image required."
+    },
+    "tiktok": {
+      "enabled": true,
+      "adapter": "tiktok",
+      "simulated_success_rate": 0.50,
+      "notes": "Video-first. Static image ads will underperform."
+    },
+    "indeed": {
+      "enabled": true,
+      "adapter": "indeed",
+      "simulated_success_rate": 0.70,
+      "notes": "Job board. Different format from social. May need separate ad pool."
+    }
+  }
+}

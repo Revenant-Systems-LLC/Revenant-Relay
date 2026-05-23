@@ -1,0 +1,192 @@
+import os
+import random
+from pathlib import Path
+
+try:
+    import praw
+    import prawcore
+    PRAW_AVAILABLE = True
+except ImportError:
+    PRAW_AVAILABLE = False
+
+
+def _resolve_media(media_path):
+    """Resolve media_path relative to repo root if not absolute."""
+    p = Path(media_path)
+    if p.is_absolute():
+        return p
+    from ..paths import ROOT
+    return ROOT / p
+
+
+_ERROR_CAUSE = {
+    "AUTH_ERROR": "Invalid credentials or Reddit token expired.",
+    "CONTENT_ERROR": "Post removed or rejected — likely violates subreddit rules.",
+    "RATE_LIMIT_ERROR": "Reddit is throttling requests (429).",
+    "PLATFORM_AUTOMATION_ERROR": "Subreddit does not exist or posting not permitted.",
+    "NETWORK_ERROR": "Transient network or connection failure.",
+    "UNKNOWN_ERROR": "Could not classify failure reliably.",
+}
+
+_ERROR_FIX = {
+    "AUTH_ERROR": "Re-authenticate: refresh Reddit API tokens.",
+    "CONTENT_ERROR": "Review subreddit rules; adjust caption or target a different subreddit.",
+    "RATE_LIMIT_ERROR": "Skip Reddit for today; retry tomorrow.",
+    "PLATFORM_AUTOMATION_ERROR": "Verify subreddit name and that the account has posting rights.",
+    "NETWORK_ERROR": "Retry once; likely transient.",
+    "UNKNOWN_ERROR": "Investigate manually.",
+}
+
+_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+
+
+def _result(success, post_url=None, error_type=None, detected=None, raw=None):
+    return {
+        "success": success,
+        "error_type": error_type,
+        "detected_issue": detected,
+        "likely_cause": _ERROR_CAUSE.get(error_type) if error_type else None,
+        "suggested_fix": _ERROR_FIX.get(error_type) if error_type else None,
+        "raw_error": raw,
+        "post_url": post_url,
+        "screenshot_path": None,
+        "transient": error_type in _TRANSIENT_TYPES if error_type else False,
+    }
+
+
+class RedditAdapter:
+    def __init__(self, reddit_config):
+        """
+        reddit_config: dict from settings["reddit"] with env var names.
+        Raises RuntimeError if PRAW not installed or credentials missing.
+        """
+        if not PRAW_AVAILABLE:
+            raise RuntimeError(
+                "praw is not installed. Run: pip install praw"
+            )
+
+        cfg = reddit_config or {}
+        client_id = os.getenv(cfg.get("client_id_env_var", ""))
+        client_secret = os.getenv(cfg.get("client_secret_env_var", ""))
+        refresh_token = os.getenv(cfg.get("refresh_token_env_var", ""))
+        username = os.getenv(cfg.get("username_env_var", ""))
+        password = os.getenv(cfg.get("password_env_var", ""))
+        user_agent = os.getenv(cfg.get("user_agent_env_var", "")) or "RevenantRelay/1.0"
+
+        if not client_id or not client_secret:
+            raise RuntimeError(
+                "Reddit credentials missing. Set env vars: "
+                f"{cfg.get('client_id_env_var')}, {cfg.get('client_secret_env_var')}"
+            )
+
+        if refresh_token:
+            self._reddit = praw.Reddit(
+                client_id=client_id,
+                client_secret=client_secret,
+                refresh_token=refresh_token,
+                user_agent=user_agent,
+            )
+        elif username and password:
+            self._reddit = praw.Reddit(
+                client_id=client_id,
+                client_secret=client_secret,
+                username=username,
+                password=password,
+                user_agent=user_agent,
+            )
+        else:
+            raise RuntimeError(
+                "Reddit auth incomplete. Provide either a refresh token "
+                f"({cfg.get('refresh_token_env_var')}) or username/password "
+                f"({cfg.get('username_env_var')}, {cfg.get('password_env_var')})."
+            )
+
+    def select_subreddit(self, ad, cooldown_buckets):
+        """
+        Pick a subreddit from ad["target_subreddits"] that isn't on cooldown.
+        Returns subreddit name (str) or None if all are on cooldown.
+        """
+        candidates = ad.get("target_subreddits", [])
+        if not candidates:
+            return None
+
+        reddit_cooldowns = cooldown_buckets.get("reddit", {})
+        eligible = [
+            sub for sub in candidates
+            if ad["id"] not in reddit_cooldowns.get(sub, {})
+        ]
+        if not eligible:
+            return None
+
+        return random.choice(eligible)
+
+    def post_ad(self, ad, caption, subreddit):
+        """
+        Post ad to subreddit. Returns result dict matching simulator contract.
+        Supports image posts (post_format == "image") and link posts.
+        """
+        post_format = ad.get("post_format", "link")
+        title = caption[:300]  # Reddit title limit
+
+        try:
+            sub = self._reddit.subreddit(subreddit.lstrip("r/"))
+
+            if post_format == "image":
+                media_path = ad.get("media_path", "")
+                resolved = _resolve_media(media_path) if media_path else None
+                if not resolved or not resolved.exists():
+                    return _result(
+                        False,
+                        error_type="MEDIA_ERROR",
+                        detected=f"Media file not found: {media_path}",
+                        raw=f"FileNotFoundError: {media_path}",
+                    )
+                submission = sub.submit_image(title=title, image_path=str(resolved))
+            else:
+                url = ad.get("url", "")
+                submission = sub.submit(title=title, url=url)
+
+            post_url = f"https://www.reddit.com{submission.permalink}"
+            return _result(True, post_url=post_url)
+
+        except Exception as e:
+            return _classify_error(e)
+
+
+def _classify_error(exc):
+    err_str = str(exc)
+    err_type = exc.__class__.__name__ if hasattr(exc, "__class__") else "Exception"
+
+    if not PRAW_AVAILABLE:
+        return _result(False, error_type="UNKNOWN_ERROR", detected=err_str, raw=err_str)
+
+    # Auth failures
+    if isinstance(exc, prawcore.exceptions.OAuthException):
+        return _result(False, error_type="AUTH_ERROR",
+                       detected="OAuth authentication failed.", raw=err_str)
+    if isinstance(exc, prawcore.exceptions.Forbidden):
+        return _result(False, error_type="AUTH_ERROR",
+                       detected="Access forbidden — account or token issue.", raw=err_str)
+
+    # Rate limiting
+    if isinstance(exc, prawcore.exceptions.TooManyRequests):
+        return _result(False, error_type="RATE_LIMIT_ERROR",
+                       detected="Reddit rate limit hit (429).", raw=err_str)
+
+    # Subreddit doesn't exist or no access
+    if isinstance(exc, (prawcore.exceptions.NotFound, prawcore.exceptions.Redirect)):
+        return _result(False, error_type="PLATFORM_AUTOMATION_ERROR",
+                       detected="Subreddit not found or access denied.", raw=err_str)
+
+    # Network/transient
+    if isinstance(exc, prawcore.exceptions.RequestException):
+        return _result(False, error_type="NETWORK_ERROR",
+                       detected="Network failure contacting Reddit API.", raw=err_str)
+
+    # praw APIException — content/rule violations
+    if PRAW_AVAILABLE and isinstance(exc, praw.exceptions.APIException):
+        return _result(False, error_type="CONTENT_ERROR",
+                       detected=f"Reddit API rejected post: {err_str}", raw=err_str)
+
+    return _result(False, error_type="UNKNOWN_ERROR",
+                   detected=f"Unclassified error: {err_type}", raw=err_str)

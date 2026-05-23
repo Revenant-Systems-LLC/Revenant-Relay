@@ -1,0 +1,14 @@
+{
+  "id": "RTS-001",
+  "title": "PLACEHOLDER - Replace before approving",
+  "product": "Revenant Theme Studio",
+  "approved": true,
+  "caption": "PLACEHOLDER caption. Write real human-approved copy before flipping approved to true.",
+  "platform_captions": {},
+  "media_path": "ads/rts/RTS-001/media.png",
+  "url": "https://revenantsystems.net/software",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/gamedev", "r/indiegaming", "r/rpg"],
+  "post_format": "image",
+  "notes": "Stub for engine testing. Not a real ad."
+}

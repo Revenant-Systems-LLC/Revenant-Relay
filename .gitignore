@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+*.env
+*.token
+*.secret
+config/smtp.json
+
+# Runtime state
+logs/
+data/run_history.json
+data/platform_cooldowns.json
+data/disabled_platforms.json
+
+# Browser/test output
+playwright-report/
+test-results/
+screenshots/
+*.png.tmp
+
+# IDE / agent junk
+.vscode/
+.idea/
+.claude/
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db

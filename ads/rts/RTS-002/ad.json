@@ -1,0 +1,17 @@
+{
+  "id": "RTS-002",
+  "title": "PLACEHOLDER - Replace before approving",
+  "product": "Revenant Theme Studio",
+  "approved": true,
+  "caption": "PLACEHOLDER caption. Write real human-approved copy before flipping approved to true.",
+  "platform_captions": {
+    "linkedin": "PLACEHOLDER LinkedIn-specific caption.",
+    "x": "PLACEHOLDER X-specific caption."
+  },
+  "media_path": "ads/rts/RTS-002/media.png",
+  "url": "https://revenantsystems.net/software",
+  "allowed_platforms": ["x", "linkedin", "facebook", "instagram", "pinterest"],
+  "target_subreddits": [],
+  "post_format": "link",
+  "notes": "Stub for engine testing. Demonstrates per-platform caption override."
+}

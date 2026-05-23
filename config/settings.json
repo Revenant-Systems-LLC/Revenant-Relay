@@ -1,0 +1,55 @@
+{
+  "mode": "dev",
+  "daily_post_goal": 3,
+  "max_consecutive_failures": 3,
+  "cooldown_days": 7,
+  "scheduled_mode": {
+    "headless": true,
+    "startup_delay_minutes": [0, 90],
+    "between_posts_delay_minutes": [3, 12],
+    "send_discord_report": true,
+    "send_email_report": true
+  },
+  "dev_mode": {
+    "headless": false,
+    "startup_delay_minutes": [0, 0],
+    "between_posts_delay_minutes": [0, 1],
+    "send_discord_report": false,
+    "send_email_report": false,
+    "print_local_report": true
+  },
+  "reddit": {
+    "client_id_env_var": "RR_REDDIT_CLIENT_ID",
+    "client_secret_env_var": "RR_REDDIT_CLIENT_SECRET",
+    "refresh_token_env_var": "RR_REDDIT_REFRESH_TOKEN",
+    "user_agent_env_var": "RR_REDDIT_USER_AGENT",
+    "username_env_var": "RR_REDDIT_USERNAME",
+    "password_env_var": "RR_REDDIT_PASSWORD"
+  },
+  "instagram": {
+    "username_env_var": "RR_INSTAGRAM_USERNAME",
+    "password_env_var": "RR_INSTAGRAM_PASSWORD"
+  },
+  "linkedin": {
+    "username_env_var": "RR_LINKEDIN_USERNAME",
+    "password_env_var": "RR_LINKEDIN_PASSWORD"
+  },
+  "x": {
+    "username_env_var": "RR_X_USERNAME",
+    "password_env_var": "RR_X_PASSWORD"
+  },
+  "discord": {
+    "username_env_var": "RR_DISCORD_USERNAME",
+    "password_env_var": "RR_DISCORD_PASSWORD",
+    "ad_library_channel": "mimirs-well",
+    "report_channel": "skalds-log"
+  },
+  "email": {
+    "smtp_host": "smtp.gmail.com",
+    "smtp_port": 587,
+    "sender_email_env_var": "RR_EMAIL",
+    "sender_password_env_var": "RR_EMAIL_PASSWORD",
+    "recipient_email": "user@example.com",
+    "subject_prefix": "Revenant Relay"
+  }
+}

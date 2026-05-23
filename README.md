@@ -48,3 +48,8 @@ Set these environment variables for real Pinterest posting:
 - `RR_PINTEREST_PASSWORD`
 - Optional: `RR_PINTEREST_BOARD_NAME`
 
+## TikTok adapter environment
+Set these environment variables for TikTok adapter initialization:
+- `RR_TIKTOK_USERNAME`
+- `RR_TIKTOK_PASSWORD`
+- Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)

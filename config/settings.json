@@ -68,5 +68,10 @@
     "username_env_var": "RR_PINTEREST_USERNAME",
     "password_env_var": "RR_PINTEREST_PASSWORD",
     "board_name_env_var": "RR_PINTEREST_BOARD_NAME"
+  },
+  "tiktok": {
+    "username_env_var": "RR_TIKTOK_USERNAME",
+    "password_env_var": "RR_TIKTOK_PASSWORD",
+    "enable_automation_env_var": "RR_TIKTOK_ENABLE_AUTOMATION"
   }
 }

@@ -11,4 +11,11 @@ def load_adapter(platform, settings):
         except RuntimeError as e:
             print(f"[Adapter] Reddit unavailable: {e}. Falling back to simulator.")
             return None
+    if platform == "pinterest":
+        try:
+            from .platforms.pinterest import PinterestAdapter
+            return PinterestAdapter(settings.get("pinterest", {}), settings)
+        except RuntimeError as e:
+            print(f"[Adapter] Pinterest unavailable: {e}. Falling back to simulator.")
+            return None
     return None

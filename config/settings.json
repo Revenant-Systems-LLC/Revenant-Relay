@@ -5,15 +5,27 @@
   "cooldown_days": 7,
   "scheduled_mode": {
     "headless": true,
-    "startup_delay_minutes": [0, 90],
-    "between_posts_delay_minutes": [3, 12],
+    "startup_delay_minutes": [
+      0,
+      90
+    ],
+    "between_posts_delay_minutes": [
+      3,
+      12
+    ],
     "send_discord_report": true,
     "send_email_report": true
   },
   "dev_mode": {
     "headless": false,
-    "startup_delay_minutes": [0, 0],
-    "between_posts_delay_minutes": [0, 1],
+    "startup_delay_minutes": [
+      0,
+      0
+    ],
+    "between_posts_delay_minutes": [
+      0,
+      1
+    ],
     "send_discord_report": false,
     "send_email_report": false,
     "print_local_report": true
@@ -51,5 +63,10 @@
     "sender_password_env_var": "RR_EMAIL_PASSWORD",
     "recipient_email": "user@example.com",
     "subject_prefix": "Revenant Relay"
+  },
+  "pinterest": {
+    "username_env_var": "RR_PINTEREST_USERNAME",
+    "password_env_var": "RR_PINTEREST_PASSWORD",
+    "board_name_env_var": "RR_PINTEREST_BOARD_NAME"
   }
 }

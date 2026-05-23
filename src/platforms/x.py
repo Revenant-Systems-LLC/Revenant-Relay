@@ -340,10 +340,11 @@ class XAdapter:
                     return href, "status_link_detected", False
                 return f"https://x.com{href}", "status_link_detected", False
 
-        html = page.content().lower()
-        if "your post was sent" in html or "posted" in html or "post sent" in html:
-            return None, "ui_confirmation_without_url", False
+        explicit_confirmation = page.locator('[role="status"]:has-text("Your post was sent"), [data-testid="toast"]:has-text("Your post was sent")')
+        if explicit_confirmation.count() > 0:
+            return None, "explicit_send_toast_detected", False
 
+        html = page.content().lower()
         if "action blocked" in html or "rate limit" in html or "try again later" in html:
             return None, "x_rate_limit_or_action_block", True
 

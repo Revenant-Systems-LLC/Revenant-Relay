@@ -401,24 +401,89 @@ class SnapchatAdapter:
             }
 
         page.wait_for_timeout(4000)
-        conf = (page.content() or "").lower()
-        confirmation_markers = ["published", "campaign created", "saved", "draft saved", "submitted"]
-        if any(m in conf for m in confirmation_markers):
+
+        confirmation = self._detect_ads_confirmation(page)
+        if confirmation:
             return {
                 "success": True,
                 "error_type": None,
-                "detected": "Snapchat UI confirmed campaign save/publish action, but direct public post URL is not exposed.",
-                "raw": "ui_confirmation_without_public_url",
-                "post_url": None,
+                "detected": confirmation["detected"],
+                "raw": confirmation["raw"],
+                "post_url": confirmation.get("post_url"),
             }
 
         return {
             "success": False,
             "error_type": "PLATFORM_AUTOMATION_ERROR",
-            "detected": "Snapchat action was triggered but success confirmation was uncertain.",
-            "raw": "confirmation_uncertain",
+            "detected": "Snapchat publish/save confirmation was ambiguous.",
+            "raw": "No reliable Snapchat confirmation signal found after submit action (missing entity ID URL/link, specific success toast/dialog, confirmation/review page transition, or created-row match).",
             "post_url": None,
         }
+
+    @staticmethod
+    def _url_has_entity_id(url):
+        if not url:
+            return False
+        normalized = url.strip().rstrip("/")
+        if not normalized:
+            return False
+        tail = normalized.split("/")[-1].split("?")[0].split("#")[0]
+        if not tail:
+            return False
+        # Accept IDs/tokens like numeric IDs, UUIDs, or slug-ish opaque handles.
+        if len(tail) < 6:
+            return False
+        return any(ch.isdigit() for ch in tail) or "-" in tail or "_" in tail
+
+    def _detect_ads_confirmation(self, page):
+        current_url = page.url or ""
+        current_url_lower = current_url.lower()
+
+        # 1) Created entity URL/ID capture (must include concrete ID/token).
+        entity_url_markers = ["/campaigns/", "/ads/", "/ad-squad/"]
+        if any(marker in current_url_lower for marker in entity_url_markers) and self._url_has_entity_id(current_url):
+            return {
+                "detected": "Snapchat navigated to a created campaign/ad entity URL after submit.",
+                "raw": "entity_url_with_id_detected",
+                "post_url": current_url,
+            }
+
+        entity_link = page.locator('a[href*="/campaigns/"], a[href*="/ads/"], a[href*="/ad-squad/"]')
+        if entity_link.count() > 0:
+            href = entity_link.first.get_attribute("href")
+            if href:
+                normalized = href if href.startswith("http") else f"https://ads.snapchat.com{href}"
+                if self._url_has_entity_id(normalized):
+                    return {
+                        "detected": "Snapchat exposed a created campaign/ad entity link after submit.",
+                        "raw": "entity_link_with_id_detected",
+                        "post_url": normalized,
+                    }
+
+        # 2) Snapchat-specific confirmation toasts/dialogs.
+        success_toast = page.locator(
+            '[role="alert"]:has-text("Campaign created"), '
+            '[role="alert"]:has-text("Draft created"), '
+            '[role="dialog"]:has-text("Campaign created"), '
+            '[role="dialog"]:has-text("Review your campaign")'
+        )
+        if success_toast.count() > 0:
+            return {
+                "detected": "Snapchat success toast/dialog appeared after submit.",
+                "raw": "success_toast_or_dialog_detected",
+                "post_url": current_url,
+            }
+
+        # 3) Confirmation/review/success route transition after submit.
+        # Intentionally excludes generic '/draft' by itself.
+        if any(seg in current_url_lower for seg in ["/confirm", "/confirmation", "/review", "/success"]):
+            return {
+                "detected": "Snapchat navigated to a confirmation/review/success route after submit.",
+                "raw": "confirmation_route_detected",
+                "post_url": current_url,
+            }
+
+        return None
 
     def _capture_screenshot(self, page):
         if page is None:

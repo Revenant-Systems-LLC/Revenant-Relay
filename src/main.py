@@ -7,29 +7,46 @@ from pathlib import Path
 # Allow running as `python src/main.py` from the repo root.
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from src.paths import SETTINGS_FILE
-    from src.cooldowns import load_clean_cooldowns, add_cooldown, add_reddit_cooldown
-    from src.platform_selector import build_tiers, select_next_platform
-    from src.ad_selector import select_ad_for_platform
-    from src.simulator import simulate_post
-    from src.history import new_run, append_run
-    from src.reporter import write_run_json, write_report_txt, subject_line
-    from src.ad_loader import caption_for
-    from src.emailer import send_email_report
-    from src.adapter_loader import load_adapter
-    from src.secret_loader import load_secrets
+    _IMPORT_PREFIX = "src"
 else:
-    from .paths import SETTINGS_FILE
-    from .cooldowns import load_clean_cooldowns, add_cooldown, add_reddit_cooldown
-    from .platform_selector import build_tiers, select_next_platform
-    from .ad_selector import select_ad_for_platform
-    from .simulator import simulate_post
-    from .history import new_run, append_run
-    from .reporter import write_run_json, write_report_txt, subject_line
-    from .ad_loader import caption_for
-    from .emailer import send_email_report
-    from .adapter_loader import load_adapter
-    from .secret_loader import load_secrets
+    _IMPORT_PREFIX = __package__
+
+paths = __import__(f"{_IMPORT_PREFIX}.paths", fromlist=["SETTINGS_FILE"])
+cooldowns_mod = __import__(
+    f"{_IMPORT_PREFIX}.cooldowns",
+    fromlist=["load_clean_cooldowns", "add_cooldown", "add_reddit_cooldown"],
+)
+platform_selector_mod = __import__(
+    f"{_IMPORT_PREFIX}.platform_selector", fromlist=["build_tiers", "select_next_platform"]
+)
+ad_selector_mod = __import__(f"{_IMPORT_PREFIX}.ad_selector", fromlist=["select_ad_for_platform"])
+simulator_mod = __import__(f"{_IMPORT_PREFIX}.simulator", fromlist=["simulate_post"])
+history_mod = __import__(f"{_IMPORT_PREFIX}.history", fromlist=["new_run", "append_run"])
+reporter_mod = __import__(
+    f"{_IMPORT_PREFIX}.reporter", fromlist=["write_run_json", "write_report_txt", "subject_line"]
+)
+ad_loader_mod = __import__(f"{_IMPORT_PREFIX}.ad_loader", fromlist=["caption_for"])
+emailer_mod = __import__(f"{_IMPORT_PREFIX}.emailer", fromlist=["send_email_report"])
+adapter_loader_mod = __import__(f"{_IMPORT_PREFIX}.adapter_loader", fromlist=["load_adapter"])
+secret_loader_mod = __import__(f"{_IMPORT_PREFIX}.secret_loader", fromlist=["load_secrets"])
+
+SETTINGS_FILE = paths.SETTINGS_FILE
+load_clean_cooldowns = cooldowns_mod.load_clean_cooldowns
+add_cooldown = cooldowns_mod.add_cooldown
+add_reddit_cooldown = cooldowns_mod.add_reddit_cooldown
+build_tiers = platform_selector_mod.build_tiers
+select_next_platform = platform_selector_mod.select_next_platform
+select_ad_for_platform = ad_selector_mod.select_ad_for_platform
+simulate_post = simulator_mod.simulate_post
+new_run = history_mod.new_run
+append_run = history_mod.append_run
+write_run_json = reporter_mod.write_run_json
+write_report_txt = reporter_mod.write_report_txt
+subject_line = reporter_mod.subject_line
+caption_for = ad_loader_mod.caption_for
+send_email_report = emailer_mod.send_email_report
+load_adapter = adapter_loader_mod.load_adapter
+load_secrets = secret_loader_mod.load_secrets
 
 
 def load_settings():
@@ -143,10 +160,14 @@ def run(mode):
 
     mode_settings = settings.get(f"{mode}_mode", {})
     if mode_settings.get("send_email_report"):
-        try:
-            send_email_report(run_log, settings, mode)
-        except Exception as e:
-            print(f"[Email] Unexpected error: {e}")
+        send_email_report(run_log, settings, mode)
+
+    email_status = run_log.get("email_report", {})
+    if email_status.get("enabled"):
+        if email_status.get("sent"):
+            print("[Email] Report status: sent")
+        else:
+            print(f"[Email] Report status: not sent ({email_status.get('error')})")
 
     return run_log
 

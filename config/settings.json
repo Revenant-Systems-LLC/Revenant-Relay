@@ -75,5 +75,11 @@
     "username_env_var": "RR_TIKTOK_USERNAME",
     "password_env_var": "RR_TIKTOK_PASSWORD",
     "enable_automation_env_var": "RR_TIKTOK_ENABLE_AUTOMATION"
+  },
+  "snapchat": {
+    "username_env_var": "RR_SNAPCHAT_USERNAME",
+    "password_env_var": "RR_SNAPCHAT_PASSWORD",
+    "post_target_env_var": "RR_SNAPCHAT_POST_TARGET",
+    "business_url_env_var": "RR_SNAPCHAT_BUSINESS_URL"
   }
 }

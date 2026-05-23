@@ -60,3 +60,8 @@ Set these environment variables for real LinkedIn posting:
 - `RR_LINKEDIN_PASSWORD`
 - `RR_LINKEDIN_POST_TARGET` (`company` or `profile`; `company` recommended)
 - `RR_LINKEDIN_COMPANY_PAGE_URL` (required when target is `company`)
+
+## X adapter environment
+Set these environment variables for real X posting:
+- `RR_X_USERNAME`
+- `RR_X_PASSWORD`

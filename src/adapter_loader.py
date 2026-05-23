@@ -25,4 +25,11 @@ def load_adapter(platform, settings):
         except RuntimeError as e:
             print(f"[Adapter] TikTok unavailable: {e}. Falling back to simulator.")
             return None
+    if platform == "x":
+        try:
+            from .platforms.x import XAdapter
+            return XAdapter(settings.get("x", {}), settings)
+        except RuntimeError as e:
+            print(f"[Adapter] X unavailable: {e}. Falling back to simulator.")
+            return None
     return None

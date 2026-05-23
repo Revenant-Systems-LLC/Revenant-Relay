@@ -53,3 +53,8 @@ Set these environment variables for TikTok adapter initialization:
 - `RR_TIKTOK_USERNAME`
 - `RR_TIKTOK_PASSWORD`
 - Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)
+
+## X adapter environment
+Set these environment variables for real X posting:
+- `RR_X_USERNAME`
+- `RR_X_PASSWORD`

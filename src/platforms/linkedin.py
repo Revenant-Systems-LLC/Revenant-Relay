@@ -366,13 +366,14 @@ class LinkedInAdapter:
         if post_url:
             return _result(True, post_url=post_url)
 
-        if "post successful" in body or "your post is now live" in body or "shared" in body:
+        success_toast = page.locator('[role="status"]:has-text("Post successful"), [role="alert"]:has-text("Post successful"), [role="status"]:has-text("Your post is now live")')
+        if success_toast.count() > 0:
             return _result(
                 True,
                 post_url=None,
                 error_type=None,
-                detected="LinkedIn UI confirmed posting, but a post URL was not obtainable.",
-                raw="ui_confirmed_without_url",
+                detected="LinkedIn displayed an explicit post-success confirmation message.",
+                raw="explicit_success_toast_detected",
             )
 
         if "temporarily restricted" in body or "try again later" in body:

@@ -1,66 +1,68 @@
 import os
 import smtplib
 import ssl
-from email.utils import parseaddr
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import parseaddr
 
 
 def send_email_report(run_log, settings, mode):
     """
     Send final email report after run completes.
-    Only sends if email config exists and credentials are available in env vars.
-    Fails gracefully if email sending fails — logs error but doesn't crash engine.
+    Returns structured status and never raises to the caller.
     """
-    run_log["email_report"] = {
-        "enabled": bool(settings.get("email")),
-        "attempted": False,
-        "sent": False,
-        "error": None,
-        "recipient": None,
-    }
+    del mode  # mode retained for call compatibility
 
-    if not settings.get("email"):
-        return run_log["email_report"]
+    email_config = settings.get("email")
+    if not email_config:
+        return {
+            "attempted": False,
+            "sent": False,
+            "recipient": None,
+            "subject": None,
+            "error": None,
+            "reason": "missing_config",
+        }
 
-    email_config = settings["email"]
     smtp_host = email_config.get("smtp_host")
     smtp_port = email_config.get("smtp_port", 587)
     sender_email_var = email_config.get("sender_email_env_var")
     sender_password_var = email_config.get("sender_password_env_var")
     recipient_email = email_config.get("recipient_email")
     subject_prefix = email_config.get("subject_prefix", "Revenant Relay")
-    use_ssl = email_config.get("use_ssl", smtp_port == 465)
 
-    run_log["email_report"]["recipient"] = recipient_email
+    status = {
+        "attempted": False,
+        "sent": False,
+        "recipient": recipient_email,
+        "subject": None,
+        "error": None,
+        "reason": None,
+    }
 
-    # Load credentials from env vars
+    if not smtp_host or not sender_email_var or not sender_password_var or not recipient_email:
+        status["reason"] = "missing_config"
+        status["error"] = "smtp host, sender env var names, and recipient are required"
+        return status
+
     sender_email = os.getenv(sender_email_var)
     sender_password = os.getenv(sender_password_var)
 
-    if not sender_email or not sender_password or not recipient_email:
-        print(
-            f"[Email] Skipping email: missing credentials "
-            f"({sender_email_var}={bool(sender_email)}, "
-            f"{sender_password_var}={bool(sender_password)}, "
-            f"recipient={recipient_email})"
-        )
-        run_log["email_report"]["error"] = "missing_credentials_or_recipient"
-        return run_log["email_report"]
+    if not sender_email or not sender_password:
+        status["reason"] = "missing_credentials"
+        status["error"] = "sender credentials missing"
+        return status
 
     if not _is_valid_email(recipient_email):
-        print(f"[Email] Skipping email: invalid recipient '{recipient_email}'")
-        run_log["email_report"]["error"] = "invalid_recipient_email"
-        return run_log["email_report"]
+        status["reason"] = "missing_config"
+        status["error"] = "invalid recipient email"
+        return status
 
     try:
-        # Build email
-        status = run_log.get("final_status", "UNKNOWN")
+        final_status = run_log.get("final_status", "UNKNOWN")
         successes = run_log.get("successes", 0)
         goal = run_log.get("daily_goal", 3)
-        subject = f"{subject_prefix} - {status} - {successes}/{goal} Posted"
-
-        # Email body: human-readable report
+        subject = f"{subject_prefix} - {final_status} - {successes}/{goal} Posted"
         body = _build_report_body(run_log)
 
         msg = MIMEMultipart()
@@ -69,29 +71,31 @@ def send_email_report(run_log, settings, mode):
         msg["Subject"] = subject
         msg.attach(MIMEText(body, "plain"))
 
-        # Send via encrypted SMTP transport.
-        run_log["email_report"]["attempted"] = True
-        tls_context = ssl.create_default_context()
-        if use_ssl:
-            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=tls_context) as server:
+        status["attempted"] = True
+        status["subject"] = subject
+
+        context = ssl.create_default_context()
+        if int(smtp_port) == 465:
+            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context) as server:
                 server.login(sender_email, sender_password)
                 server.send_message(msg)
         else:
             with smtplib.SMTP(smtp_host, smtp_port) as server:
                 server.ehlo()
-                server.starttls(context=tls_context)
+                server.starttls(context=context)
                 server.ehlo()
                 server.login(sender_email, sender_password)
                 server.send_message(msg)
 
         print(f"[Email] Report sent to {recipient_email} (subject: {subject})")
-        run_log["email_report"]["sent"] = True
-        return run_log["email_report"]
-
-    except Exception as e:
-        print(f"[Email] Failed to send report: {e}")
-        run_log["email_report"]["error"] = str(e)
-        return run_log["email_report"]
+        status["sent"] = True
+        status["reason"] = "sent"
+        return status
+    except Exception as exc:
+        print(f"[Email] Failed to send report: {exc}")
+        status["error"] = str(exc)
+        status["reason"] = "send_failed"
+        return status
 
 
 def _is_valid_email(value):

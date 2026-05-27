@@ -5,8 +5,11 @@ from .paths import RUN_HISTORY_FILE
 
 
 def _load():
-    with RUN_HISTORY_FILE.open("r", encoding="utf-8") as f:
-        return json.load(f).get("runs", [])
+    try:
+        with RUN_HISTORY_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f).get("runs", [])
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        return []
 
 
 def _save(runs):
@@ -65,6 +68,7 @@ def platforms_used_yesterday():
             succeeded.add(platform)
         else:
             failed.add(platform)
+    failed -= succeeded
     return succeeded, failed, attempted
 
 

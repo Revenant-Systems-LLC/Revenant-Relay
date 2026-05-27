@@ -35,7 +35,7 @@ _ERROR_FIX = {
     "NETWORK_ERROR": "Retry once after network stabilizes.",
 }
 
-_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+_TRANSIENT_TYPES = {"NETWORK_ERROR"}
 
 
 def _resolve_media(media_path):
@@ -76,6 +76,7 @@ class XAdapter:
                 f"{self.username_env}, {self.password_env}"
             )
 
+        self.settings = settings or {}
         mode = (settings or {}).get("mode", "dev")
         mode_settings = (settings or {}).get(f"{mode}_mode", {})
         self.headless = mode_settings.get("headless", mode == "scheduled")
@@ -161,6 +162,15 @@ class XAdapter:
                         screenshot_path=screenshot,
                     )
 
+                # Passive Lead Scout Sweep
+                try:
+                    if self.settings.get("lead_scout", {}).get("enabled", True):
+                        from ..scout_logger import log_leads
+                        leads = self.scout_leads(page, self.settings)
+                        log_leads(leads)
+                except Exception as e:
+                    print(f"[X Scout] Error running Lead Scout: {e}")
+
                 if success_url:
                     return _result(True, post_url=success_url)
 
@@ -198,6 +208,83 @@ class XAdapter:
                     browser.close()
                 except Exception:
                     pass
+
+    def scout_leads(self, page, settings):
+        """
+        Scan X for keywords defined in settings using the active browser page.
+        Returns a list of discovered lead dictionaries.
+        """
+        scout_cfg = settings.get("lead_scout", {})
+        if not scout_cfg.get("enabled", True):
+            return []
+
+        keywords = scout_cfg.get("keywords", [])
+        limit = min(scout_cfg.get("max_leads_per_run", 5), 3) # Cap X sweeps lower to prevent rate limit
+        leads = []
+
+        import urllib.parse
+        print(f"[X Scout] Starting passive sweep for {len(keywords)} keywords on active page...")
+        try:
+            for kw in keywords:
+                query_encoded = urllib.parse.quote(kw)
+                search_url = f"https://x.com/search?q={query_encoded}&f=live"
+                page.goto(search_url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(2000)
+
+                # Wait for tweets to render
+                try:
+                    page.wait_for_selector('article[data-testid="tweet"]', timeout=8000)
+                except Exception:
+                    # Skip if no tweets found or timed out
+                    continue
+
+                tweet_articles = page.locator('article[data-testid="tweet"]').all()
+                count = 0
+                for article in tweet_articles:
+                    if count >= limit:
+                        break
+                    
+                    try:
+                        # Extract author handle
+                        author_loc = article.locator('[data-testid="User-Name"]').first
+                        author_text = author_loc.inner_text() if author_loc.count() > 0 else ""
+                        if not author_text:
+                            continue
+                        # format e.g. "Name\n@handle\n·\n1h"
+                        lines = author_text.split("\n")
+                        handle = lines[1] if len(lines) > 1 and lines[1].startswith("@") else lines[0]
+
+                        # Avoid capturing ourselves
+                        if self.username and self.username.lower() in handle.lower():
+                            continue
+
+                        # Extract tweet content
+                        text_loc = article.locator('[data-testid="tweetText"]').first
+                        content = text_loc.inner_text() if text_loc.count() > 0 else ""
+                        if not content:
+                            continue
+
+                        # Extract tweet status URL or link
+                        link_loc = article.locator('a[href*="/status/"]').first
+                        status_path = link_loc.get_attribute("href") if link_loc.count() > 0 else ""
+                        tweet_url = f"https://x.com{status_path}" if status_path else ""
+                        if not tweet_url:
+                            continue
+
+                        leads.append({
+                            "platform": "x",
+                            "keyword": kw,
+                            "author": handle,
+                            "post_content": content[:500],
+                            "post_url": tweet_url
+                        })
+                        count += 1
+                    except Exception:
+                        continue
+        except Exception as e:
+            print(f"[X Scout] Warning: Passive sweep encountered an issue: {e}")
+
+        return leads
 
     def _ensure_logged_in(self, page):
         page.goto("https://x.com/compose/post", wait_until="domcontentloaded", timeout=60000)

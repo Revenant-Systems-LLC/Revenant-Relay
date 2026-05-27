@@ -9,3 +9,8 @@ def test_is_valid_email_rejects_invalid_values():
     assert not _is_valid_email("")
     assert not _is_valid_email("invalid")
     assert not _is_valid_email("user@localhost")
+
+
+def test_is_valid_email_accepts_multiple_addresses():
+    assert _is_valid_email("user@example.com, another@example.com")
+    assert not _is_valid_email("user@example.com, invalid")

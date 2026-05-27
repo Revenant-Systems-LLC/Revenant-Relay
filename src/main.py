@@ -2,6 +2,8 @@ import argparse
 import json
 import sys
 from datetime import datetime
+import time
+import random
 from pathlib import Path
 
 # Allow running as `python src/main.py` from the repo root.
@@ -57,9 +59,18 @@ def load_settings():
 def run(mode):
     load_secrets()
     settings = load_settings()
+    settings["mode"] = mode
     goal = settings.get("daily_post_goal", 3)
     max_consec = settings.get("max_consecutive_failures", 3)
     cooldown_days = settings.get("cooldown_days", 7)
+    
+    mode_settings = settings.get(f"{mode}_mode", {})
+    startup_range = mode_settings.get("startup_delay_minutes", [0, 0])
+    if startup_range[1] > 0:
+        delay_min = random.uniform(startup_range[0], startup_range[1])
+        delay_sec = delay_min * 60
+        print(f"[Startup] Waiting {delay_min:.1f} minutes before starting...")
+        time.sleep(delay_sec)
 
     cooldowns = load_clean_cooldowns()
     tiers = build_tiers()
@@ -80,6 +91,15 @@ def run(mode):
             run_log["final_status"] = "FAILED" if run_log["successes"] == 0 else "PARTIAL"
             run_log["stop_reason"] = f"Hit {max_consec} consecutive failures."
             break
+
+        # Between-posts delay
+        if run_log["attempts"]:
+            between_range = mode_settings.get("between_posts_delay_minutes", [0, 0])
+            if between_range[1] > 0:
+                delay_min = random.uniform(between_range[0], between_range[1])
+                delay_sec = delay_min * 60
+                print(f"[Delay] Waiting {delay_min:.1f} minutes before next post...")
+                time.sleep(delay_sec)
 
         platform, tier_label = select_next_platform(tiers, used_today, unavailable_today)
         if platform is None:

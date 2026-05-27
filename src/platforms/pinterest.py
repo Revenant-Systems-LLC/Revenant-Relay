@@ -32,7 +32,7 @@ _ERROR_FIX = {
     "UNKNOWN_ERROR": "Inspect logs and screenshot for manual triage.",
 }
 
-_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+_TRANSIENT_TYPES = {"NETWORK_ERROR"}
 
 
 def _resolve_media(media_path):
@@ -98,6 +98,9 @@ class PinterestAdapter:
             return _result(False, error_type="CONTENT_ERROR", detected="Missing title/caption for Pin", raw="missing_title")
 
         screenshot_path = None
+        browser = None
+        context = None
+        page = None
         try:
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=self.headless)
@@ -110,13 +113,22 @@ class PinterestAdapter:
                 self._login(page)
                 post_url = self._create_pin(page, str(resolved), title, description, destination_url)
 
-                context.close()
-                browser.close()
                 return _result(True, post_url=post_url)
         except Exception as e:
             kind = self._classify_error(e)
-            screenshot_path = self._save_failure_screenshot_localsafe(locals())
+            screenshot_path = self._save_failure_screenshot(page)
             return _result(False, error_type=kind, detected=str(e), raw=repr(e), screenshot_path=screenshot_path)
+        finally:
+            if context is not None:
+                try:
+                    context.close()
+                except Exception:
+                    pass
+            if browser is not None:
+                try:
+                    browser.close()
+                except Exception:
+                    pass
 
     def _login(self, page):
         page.goto("https://www.pinterest.com/login/", wait_until="domcontentloaded", timeout=60000)
@@ -160,8 +172,7 @@ class PinterestAdapter:
             return "CONTENT_ERROR"
         return "UNKNOWN_ERROR"
 
-    def _save_failure_screenshot_localsafe(self, local_vars):
-        page = local_vars.get("page")
+    def _save_failure_screenshot(self, page):
         if page is None:
             return None
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")

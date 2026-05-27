@@ -31,7 +31,7 @@ _ERROR_FIX = {
     "CONTENT_ERROR": "Adjust approved caption/media to comply with LinkedIn posting rules.",
 }
 
-_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+_TRANSIENT_TYPES = {"NETWORK_ERROR"}
 
 
 
@@ -90,6 +90,7 @@ class LinkedInAdapter:
                 f"{self.company_page_url_env}"
             )
 
+        self.settings = settings or {}
         mode = (settings or {}).get("mode", "dev")
         mode_settings = (settings or {}).get(f"{mode}_mode", {})
         self.headless = mode_settings.get("headless", mode == "scheduled")
@@ -179,6 +180,79 @@ class LinkedInAdapter:
                     browser.close()
                 except Exception:
                     pass
+
+    def scout_leads(self, page, settings):
+        """
+        Scan LinkedIn for keywords defined in settings using the active browser page.
+        Returns a list of discovered lead dictionaries.
+        """
+        scout_cfg = settings.get("lead_scout", {})
+        if not scout_cfg.get("enabled", True):
+            return []
+
+        keywords = scout_cfg.get("keywords", [])
+        limit = min(scout_cfg.get("max_leads_per_run", 5), 3) # Cap LinkedIn sweeps lower to prevent rate limit
+        leads = []
+
+        import urllib.parse
+        print(f"[LinkedIn Scout] Starting passive sweep for {len(keywords)} keywords on active page...")
+        try:
+            for kw in keywords:
+                query_encoded = urllib.parse.quote(kw)
+                search_url = f"https://www.linkedin.com/search/results/content/?keywords={query_encoded}&origin=GLOBAL_SEARCH_HEADER"
+                page.goto(search_url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(2000)
+
+                # Wait for search results container
+                try:
+                    page.wait_for_selector('.reusable-search__result-container', timeout=8000)
+                except Exception:
+                    continue
+
+                containers = page.locator('.reusable-search__result-container').all()
+                count = 0
+                for container in containers:
+                    if count >= limit:
+                        break
+                    
+                    try:
+                        # Extract author name
+                        author_loc = container.locator('.entity-result__title-text, .app-shared-outline-decorator').first
+                        author = author_loc.inner_text().strip() if author_loc.count() > 0 else ""
+                        if not author:
+                            continue
+                        author = author.split("\n")[0]  # strip subtitles or degrees
+
+                        # Extract post content text
+                        content_loc = container.locator('.feed-shared-update-v2__description-text, .entity-result__summary').first
+                        content = content_loc.inner_text().strip() if content_loc.count() > 0 else ""
+                        if not content:
+                            continue
+
+                        # Extract post URL or link
+                        link_loc = container.locator('a[href*="/feed/update/urn:li:activity:"]').first
+                        post_path = link_loc.get_attribute("href") if link_loc.count() > 0 else ""
+                        post_url = post_path
+                        if post_url and post_url.startswith("/"):
+                            post_url = f"https://www.linkedin.com{post_url}"
+                        
+                        if not post_url:
+                            continue
+
+                        leads.append({
+                            "platform": "linkedin",
+                            "keyword": kw,
+                            "author": author,
+                            "post_content": content[:500],
+                            "post_url": post_url
+                        })
+                        count += 1
+                    except Exception:
+                        continue
+        except Exception as e:
+            print(f"[LinkedIn Scout] Warning: Passive sweep encountered an issue: {e}")
+
+        return leads
 
     def _ensure_authenticated(self, page):
         page.goto("https://www.linkedin.com/feed/", wait_until="domcontentloaded", timeout=60000)
@@ -363,18 +437,26 @@ class LinkedInAdapter:
                 if href:
                     post_url = href if href.startswith("http") else f"https://www.linkedin.com{href}"
 
-        if post_url:
-            return _result(True, post_url=post_url)
+        if post_url or success_toast.count() > 0:
+            # Passive Lead Scout Sweep
+            try:
+                if self.settings.get("lead_scout", {}).get("enabled", True):
+                    from ..scout_logger import log_leads
+                    leads = self.scout_leads(page, self.settings)
+                    log_leads(leads)
+            except Exception as e:
+                print(f"[LinkedIn Scout] Error running Lead Scout: {e}")
 
-        success_toast = page.locator('[role="status"]:has-text("Post successful"), [role="alert"]:has-text("Post successful"), [role="status"]:has-text("Your post is now live")')
-        if success_toast.count() > 0:
-            return _result(
-                True,
-                post_url=None,
-                error_type=None,
-                detected="LinkedIn displayed an explicit post-success confirmation message.",
-                raw="explicit_success_toast_detected",
-            )
+            if post_url:
+                return _result(True, post_url=post_url)
+            else:
+                return _result(
+                    True,
+                    post_url=None,
+                    error_type=None,
+                    detected="LinkedIn displayed an explicit post-success confirmation message.",
+                    raw="explicit_success_toast_detected",
+                )
 
         if "temporarily restricted" in body or "try again later" in body:
             return _result(False, error_type="RATE_LIMIT_ERROR", detected="LinkedIn temporarily restricted posting.", raw="rate_limited")

@@ -1,0 +1,12 @@
+{
+  "id": "CS-002",
+  "product": "RS Cheat Sheets & Tips",
+  "allowed_platforms": ["reddit", "x"],
+  "target_subreddits": ["r/artificial", "r/ChatGPT", "r/LocalLLaMA"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/comb.png",
+  "caption": "Stop saying please and thank you to your AI. Sarcastic explanation of token waste.",
+  "platform_captions": {
+    "reddit": "Stop saying 'please' and 'thank you' to your AI. Polite words are literal token waste and distort system behavior. Be concise, use strict delimiters, and command the model."
+  }
+}

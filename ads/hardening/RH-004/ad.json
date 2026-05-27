@@ -1,0 +1,11 @@
+{
+  "id": "RH-004",
+  "product": "Revenant Hardening",
+  "allowed_platforms": ["linkedin", "x"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/circuit2.png",
+  "caption": "Stop trusting default AI security. How Revenant boundaries operate with zero-inference policies.",
+  "platform_captions": {
+    "linkedin": "Stop trusting default AI security.\n\nStandard LLM wrappers provide zero actual isolation. Here is a structural breakdown of how Revenant boundaries operate, enforcing strict zero-inference policies and securing your system resources.\n\nLearn more: https://revenantsystems.net"
+  }
+}

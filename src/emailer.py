@@ -76,11 +76,11 @@ def send_email_report(run_log, settings, mode):
 
         context = ssl.create_default_context()
         if int(smtp_port) == 465:
-            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context) as server:
+            with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context, timeout=30) as server:
                 server.login(sender_email, sender_password)
                 server.send_message(msg)
         else:
-            with smtplib.SMTP(smtp_host, smtp_port) as server:
+            with smtplib.SMTP(smtp_host, smtp_port, timeout=30) as server:
                 server.ehlo()
                 server.starttls(context=context)
                 server.ehlo()
@@ -99,8 +99,14 @@ def send_email_report(run_log, settings, mode):
 
 
 def _is_valid_email(value):
-    _, parsed = parseaddr(value or "")
-    return bool(parsed and "@" in parsed and "." in parsed.split("@")[-1])
+    if not value:
+        return False
+    parts = [p.strip() for p in value.split(",")]
+    for part in parts:
+        _, parsed = parseaddr(part)
+        if not (parsed and "@" in parsed and "." in parsed.split("@")[-1]):
+            return False
+    return True
 
 
 def _build_report_body(run_log):

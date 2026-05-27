@@ -1,0 +1,17 @@
+{
+  "id": "AI-001",
+  "title": "RS AI Engineering Skill Pack",
+  "product": "RS AI Engineering Pack",
+  "approved": true,
+  "caption": "Build next-gen AI agent architectures. From MCP servers to advanced memory systems, standardise your AI engineering with 13 production-ready skills: https://revenantsystems.net",
+  "platform_captions": {
+    "linkedin": "Stop guessing prompts. Architect real, autonomous agent loops. The RS AI Engineering Pack provides 13 core skills including MCP server construction, agent memory systems, and cost-aware pipeline optimization. Level up your AI capability: https://revenantsystems.net",
+    "x": "Build agents that actually work. 🤖💀\n\n13 elite AI Engineering skills: memory systems, MCP builders, autonomous loops, and cost-aware pipelines. \n\nhttps://revenantsystems.net"
+  },
+  "media_path": "ads/skills/AI-001/media.png",
+  "url": "https://www.revenantsystems.net",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/artificial", "r/LocalLLaMA", "r/AI_Agents", "r/LangChain"],
+  "post_format": "image",
+  "notes": "AI Engineering pack ad using MetaVegvisirTron'sCube_GOLD.png."
+}

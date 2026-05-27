@@ -1,0 +1,16 @@
+{
+  "id": "RTS-003",
+  "product": "Revenant Theme Studio",
+  "allowed_platforms": [
+    "pinterest",
+    "x",
+    "linkedin"
+  ],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/CYBORG_GOLD.png",
+  "caption": "Workspace: Upgraded. A desktop mockup featuring the CYBORG_GOLD wallpaper, perfectly unified with the gunmetal icon pack.",
+  "platform_captions": {
+    "pinterest": "Workspace: Upgraded. 💀✨ Featuring the CYBORG_GOLD wallpaper, perfectly unified with the gunmetal icon pack. #workspace #setup #desktop #minimalist #aesthetic #design",
+    "x": "Workspace: Upgraded. 💀✨\n\nCYBORG_GOLD meets the gunmetal icon pack.\n\nhttps://revenantsystems.net/software"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "BUN-001",
+  "title": "Full Bundle All 10 Packs - Core Ad",
+  "product": "RS Full Bundle",
+  "approved": true,
+  "caption": "Supercharge your AI agents. 145 elite skills across 10 packs. SEO, Red Teaming, Data Analytics, and more. Upgrade your workflow today at https://revenantsystems.net.",
+  "platform_captions": {
+    "linkedin": "Stop writing boilerplate prompts. The Revenant Systems Full Bundle provides 145 production-ready skills for your AI agents, covering everything from AI Architecture to Red Teaming and DevOps. Save $61 with the bundle: https://revenantsystems.net",
+    "x": "145 AI Agent Skills. 10 Packs. 1 Ultimate Bundle. 💀⚡\n\nEquip your agents with Red Teaming, Frontend Design, SEO & more. \n\nhttps://revenantsystems.net"
+  },
+  "media_path": "ads/skills/BUN-001/media.png",
+  "url": "https://www.revenantsystems.net",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/artificial", "r/ChatGPT", "r/LocalLLaMA", "r/singularity"],
+  "post_format": "image",
+  "notes": "Flagship bundle ad using CYBORG_GOLD asset."
+}

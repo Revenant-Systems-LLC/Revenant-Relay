@@ -53,6 +53,12 @@
       "adapter": "snapchat",
       "simulated_success_rate": 0.45,
       "notes": "Business/Ads Manager flow only; personal story posting is not reliably web-automatable."
+    },
+    "bluesky": {
+      "enabled": true,
+      "adapter": "bluesky",
+      "simulated_success_rate": 0.95,
+      "notes": "Decentralized social app. Uses stable open API with zero anti-bot friction."
     }
   }
 }

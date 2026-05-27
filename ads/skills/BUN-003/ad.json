@@ -1,0 +1,11 @@
+{
+  "id": "BUN-003",
+  "product": "RS Full Bundle",
+  "allowed_platforms": ["facebook", "x"],
+  "post_format": "video",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/BACKGROUND.mp4",
+  "caption": "Average User vs. Revenant Bundle. Fight formatting vs dropping a genesis prompt for instant, flawless output.",
+  "platform_captions": {
+    "facebook": "Average User vs. Revenant Bundle. Left side: fighting with Claude for formatting. Right side: dropping a bundled genesis prompt and getting instant, flawless output. Get the skills that work: https://revenantsystems.net"
+  }
+}

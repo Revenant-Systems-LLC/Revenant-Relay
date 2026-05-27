@@ -14,6 +14,15 @@ def test_append_run_last_run_and_yesterdays(tmp_path, monkeypatch):
     history_file.write_text('{"runs": []}', encoding="utf-8")
     monkeypatch.setattr(history, "RUN_HISTORY_FILE", history_file)
 
+    class MockDate:
+        @staticmethod
+        def today():
+            class MockToday:
+                def isoformat(self):
+                    return "2026-05-23"
+            return MockToday()
+    monkeypatch.setattr(history, "date", MockDate)
+
     r1 = history.new_run("dev")
     r1["date"] = "2026-05-21"
     r2 = history.new_run("dev")
@@ -39,7 +48,7 @@ def test_build_tiers_and_select_next_platform(tmp_path, monkeypatch):
     pf = tmp_path / "platforms.json"
     dis = tmp_path / "disabled.json"
     pf.write_text(json.dumps({"platforms": {"x": {"enabled": True}, "reddit": {"enabled": True}, "linkedin": {"enabled": True}, "tiktok": {"enabled": False}}}), encoding="utf-8")
-    dis.write_text(json.dumps({"disabled_platforms": ["linkedin"]}), encoding="utf-8")
+    dis.write_text(json.dumps({"disabled": ["linkedin"]}), encoding="utf-8")
     monkeypatch.setattr(platform_selector, "PLATFORMS_FILE", pf)
     monkeypatch.setattr(platform_selector, "DISABLED_FILE", dis)
     monkeypatch.setattr(platform_selector, "platforms_used_yesterday", lambda: ({"x"}, {"reddit"}, {"x", "reddit"}))

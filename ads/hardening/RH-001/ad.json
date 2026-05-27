@@ -1,0 +1,13 @@
+{
+  "id": "RH-001",
+  "product": "Revenant Hardening",
+  "allowed_platforms": ["x", "reddit", "linkedin"],
+  "target_subreddits": ["r/netsec", "r/cybersecurity", "r/LocalLLaMA", "r/AI_Agents"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/comb.png",
+  "caption": "Fix the silent time bombs in your AI app. Revenant Hardening.",
+  "platform_captions": {
+    "x": "rsh scan . -> 19 silent time bombs in your AI app. 💣💀\n\nFix them before prod. Revenant Hardening.\n\nhttps://revenantsystems.net",
+    "linkedin": "rsh scan .\n>> 19 silent time bombs in your AI app.\n\nMost AI applications are deployed with massive security holes—context window leaks, token manipulation vectors, and unbounded tool access. Scan and secure your agents before they go to production.\n\nRevenant Hardening: https://revenantsystems.net"
+  }
+}

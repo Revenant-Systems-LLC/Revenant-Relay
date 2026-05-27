@@ -1,0 +1,11 @@
+{
+  "id": "SYS-004",
+  "product": "Revenant Systems Core Architecture",
+  "allowed_platforms": ["linkedin", "x"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/circuit2.png",
+  "caption": "The Anatomy of a Revenant System. Symbiosis between machine logic and human intent.",
+  "platform_captions": {
+    "linkedin": "The Anatomy of a Revenant System.\n\nTrue agentic capability requires separating configuration, state memory, platform integration, and runtime boundaries. Here is the 4-part blueprint of a system engineered for zero-trust, high-performance environments.\n\nhttps://revenantsystems.net"
+  }
+}

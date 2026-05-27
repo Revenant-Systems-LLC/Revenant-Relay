@@ -1,0 +1,12 @@
+{
+  "id": "SYS-003",
+  "product": "Revenant Systems Core Architecture",
+  "allowed_platforms": ["x", "linkedin"],
+  "post_format": "text",
+  "media_path": null,
+  "caption": "How many times did your AI hallucinate today? Stop treating it like a search engine.",
+  "platform_captions": {
+    "x": "How many times did your AI hallucinate today? 💀\n\nStop relying on luck. Ground your AI systems with deterministic machine logic.\n\nhttps://revenantsystems.net",
+    "linkedin": "How many times did your AI hallucinate today?\n\nIf your systems rely on the LLM's memory, you are building on sand. A Revenant System grounds every state change in structured files and local context boundaries.\n\nhttps://revenantsystems.net"
+  }
+}

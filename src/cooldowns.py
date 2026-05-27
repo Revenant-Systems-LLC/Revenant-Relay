@@ -4,8 +4,11 @@ from .paths import COOLDOWNS_FILE
 
 
 def _load():
-    with COOLDOWNS_FILE.open("r", encoding="utf-8") as f:
-        return json.load(f).get("platform_cooldowns", {})
+    try:
+        with COOLDOWNS_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f).get("platform_cooldowns", {})
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        return {}
 
 
 def _save(buckets):
@@ -32,7 +35,7 @@ def load_clean_cooldowns(today=None):
                 kept_ads = {
                     ad_id: expires
                     for ad_id, expires in ads.items()
-                    if date.fromisoformat(expires) > today
+                    if date.fromisoformat(expires) >= today
                 }
                 if kept_ads:
                     kept_subs[subreddit] = kept_ads
@@ -42,7 +45,7 @@ def load_clean_cooldowns(today=None):
             kept = {
                 ad_id: expires
                 for ad_id, expires in value.items()
-                if date.fromisoformat(expires) > today
+                if date.fromisoformat(expires) >= today
             }
             if kept:
                 cleaned[platform] = kept

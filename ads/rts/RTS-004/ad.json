@@ -1,0 +1,14 @@
+{
+  "id": "RTS-004",
+  "product": "Revenant Theme Studio",
+  "allowed_platforms": [
+    "x",
+    "linkedin"
+  ],
+  "post_format": "video",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/Revenant Systems.mp4",
+  "caption": "Aesthetics dictate workflow. See the Theme Studio UI in action, emphasizing the ease of deployment.",
+  "platform_captions": {
+    "linkedin": "Aesthetics dictate workflow. \n\nYour IDE, assets, and folders are where you spend 10+ hours a day. Why are you staring at default styling? Experience the Theme Studio UI and see how easy it is to deploy custom, unified environments.\n\nhttps://revenantsystems.net/software"
+  }
+}

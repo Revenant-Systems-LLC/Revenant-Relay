@@ -1,0 +1,17 @@
+{
+  "id": "SEO-001",
+  "title": "RS SEO & Content Warfare Skill Pack",
+  "product": "RS SEO & Content Warfare Pack",
+  "approved": true,
+  "caption": "Dominate search and content landscapes. Equip your agents with 15 advanced copywriting, programmatic SEO, and strategy skills: https://revenantsystems.net",
+  "platform_captions": {
+    "linkedin": "Stop publishing AI-generated generic noise. Orchestrate programmatic, strategic, and high-impact SEO with your agents. The RS SEO & Content Warfare pack features 15 production-ready skills spanning site architecture, programmatic SEO, schema markup, and advanced copywriting workflows: https://revenantsystems.net",
+    "x": "Own the search engines. 🕸️💀\n\n15 elite SEO & Content Warfare skills covering programmatic SEO, site architecture, and advanced copywriting hooks.\n\nhttps://revenantsystems.net"
+  },
+  "media_path": "ads/skills/SEO-001/media.png",
+  "url": "https://www.revenantsystems.net",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/seo", "r/marketing", "r/GrowthHacking"],
+  "post_format": "image",
+  "notes": "SEO & Content Warfare pack ad using Yggdrasil_GOLD.png."
+}

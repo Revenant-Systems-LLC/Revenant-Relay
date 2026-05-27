@@ -5,7 +5,7 @@ from src import secret_loader
 
 def test_secrets_file_default_path(monkeypatch):
     monkeypatch.delenv("RR_SECRETS_FILE", raising=False)
-    assert secret_loader._secrets_file_path() == Path("config/secrets.env")
+    assert secret_loader._secrets_file_path() == Path(r"B:\secrets\revenant-relay.env")
 
 
 def test_secrets_file_respects_env(monkeypatch):

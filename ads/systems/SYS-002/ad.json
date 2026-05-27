@@ -1,0 +1,11 @@
+{
+  "id": "SYS-002",
+  "product": "Revenant Systems Core Architecture",
+  "allowed_platforms": ["linkedin", "x"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/CYBORG_GOLD.png",
+  "caption": "Precision over probability. Stop treating AI like a search engine.",
+  "platform_captions": {
+    "linkedin": "Precision over probability.\n\nAI is not a Google alternative. It is a probabilistic execution engine. Grounding, zero-inference architectures, and machine-logic mapping are the only ways to achieve deterministic production behavior.\n\nhttps://revenantsystems.net"
+  }
+}

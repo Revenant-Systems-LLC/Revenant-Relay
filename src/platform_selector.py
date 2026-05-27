@@ -5,14 +5,20 @@ from .history import platforms_used_yesterday
 
 
 def _load_platforms_config():
-    with PLATFORMS_FILE.open("r", encoding="utf-8") as f:
-        return json.load(f).get("platforms", {})
+    try:
+        with PLATFORMS_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f).get("platforms", {})
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        return {}
 
 
 def _load_disabled():
-    with DISABLED_FILE.open("r", encoding="utf-8") as f:
-        entries = json.load(f).get("disabled_platforms", [])
-    return {e["platform"] if isinstance(e, dict) else e for e in entries}
+    try:
+        with DISABLED_FILE.open("r", encoding="utf-8") as f:
+            entries = json.load(f).get("disabled", [])
+        return {e["platform"] if isinstance(e, dict) else e for e in entries}
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        return set()
 
 
 def build_tiers():

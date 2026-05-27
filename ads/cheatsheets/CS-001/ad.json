@@ -1,0 +1,11 @@
+{
+  "id": "CS-001",
+  "product": "RS Cheat Sheets & Tips",
+  "allowed_platforms": ["pinterest", "x"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/CYBORG_GOLD.png",
+  "caption": "The AI Architect's Checklist. Infographic using the gold circuit aesthetic.",
+  "platform_captions": {
+    "pinterest": "The AI Architect's Checklist. 💀✨ A complete, saveable blueprint for designing zero-inference agent environments. #cheatsheet #infographic #ai #engineering #developer #architecture"
+  }
+}

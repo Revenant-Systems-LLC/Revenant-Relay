@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-_DEFAULT_SECRETS_FILE = Path("config/secrets.env")
+_DEFAULT_SECRETS_FILE = Path(r"B:\secrets\revenant-relay.env")
 _SECRETS_ENV_VAR = "RR_SECRETS_FILE"
 
 

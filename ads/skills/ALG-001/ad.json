@@ -1,0 +1,17 @@
+{
+  "id": "ALG-001",
+  "title": "RS Agent & Automation Toolkit - Algiz Core",
+  "product": "RS Agent & Automation Pack",
+  "approved": true,
+  "caption": "Unleash the Algiz Agent. Equip your AI systems with 13 elite skills for autonomous loops, continuous learning, and advanced memory management: https://revenantsystems.net",
+  "platform_captions": {
+    "linkedin": "Stop babysitting your prompts. Architect true autonomous loops. The RS Agent & Automation Toolkit (Algiz Edition) equips your agents with 13 advanced skillsets including continuous learning loops, deep context save/restore, and parallel agent dispatching: https://revenantsystems.net",
+    "x": "Unleash the Algiz Agent. ᛉ💀\n\n13 elite skills for continuous learning, context save/restore, parallel dispatching, and fully autonomous loops.\n\nhttps://revenantsystems.net"
+  },
+  "media_path": "ads/skills/ALG-001/media.png",
+  "url": "https://www.revenantsystems.net",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/artificial", "r/LocalLLaMA", "r/AI_Agents", "r/automations"],
+  "post_format": "image",
+  "notes": "Premium Algiz edition ad utilizing the customized Algiz logo/artwork."
+}

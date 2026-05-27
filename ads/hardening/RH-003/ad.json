@@ -1,0 +1,10 @@
+{
+  "id": "RH-003",
+  "product": "Revenant Hardening",
+  "allowed_platforms": ["x", "reddit"],
+  "target_subreddits": ["r/artificial", "r/cybersecurity", "r/LocalLLaMA"],
+  "post_format": "text",
+  "media_path": null,
+  "caption": "The 3 ways your AI is leaking data right now:\n1. Context window spilling.\n2. Token manipulation.\n3. Unbounded tool use.\n\nWe lock it down. Revenant Hardening: https://revenantsystems.net",
+  "platform_captions": {}
+}

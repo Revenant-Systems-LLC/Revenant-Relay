@@ -1,0 +1,11 @@
+{
+  "id": "RH-002",
+  "product": "Revenant Hardening",
+  "allowed_platforms": ["linkedin", "x"],
+  "post_format": "video",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/BACKGROUND.mp4",
+  "caption": "If a 12-year-old can prompt-inject your system, you don't have a system. Revenant Hardening.",
+  "platform_captions": {
+    "linkedin": "If a 12-year-old can prompt-inject your system, you don't have a system.\n\nStop relying on basic system prompts for security. Hardening ensures your AI agents operate within strict, zero-inference boundaries that resist advanced prompt injection and jailbreak techniques.\n\nhttps://revenantsystems.net"
+  }
+}

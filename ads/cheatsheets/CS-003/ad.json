@@ -1,0 +1,11 @@
+{
+  "id": "CS-003",
+  "product": "RS Cheat Sheets & Tips",
+  "allowed_platforms": ["linkedin"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/circuit5.png",
+  "caption": "The Genesis Prompt Matrix. Structural blueprint for persona architecture.",
+  "platform_captions": {
+    "linkedin": "The Genesis Prompt Matrix.\n\nMost developers write flat system prompts. The Genesis Matrix provides a structured blueprint for persona architecture that prevents jailbreaks and enforces logical compliance.\n\nDownload the checklist: https://revenantsystems.net"
+  }
+}

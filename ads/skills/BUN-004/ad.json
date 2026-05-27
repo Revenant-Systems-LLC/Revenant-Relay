@@ -1,0 +1,11 @@
+{
+  "id": "BUN-004",
+  "product": "RS Full Bundle",
+  "allowed_platforms": ["x"],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/fromtheGrave.png",
+  "caption": "Resurrect your dead prompts. The 10 Claude skills that actually work in production.",
+  "platform_captions": {
+    "x": "Resurrect your dead prompts. 💀🔥\n\nThe 10 Claude skills that actually work in production. Stop guessing, start engineering.\n\nhttps://revenantsystems.net"
+  }
+}

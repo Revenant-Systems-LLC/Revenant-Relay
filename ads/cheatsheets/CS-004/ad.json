@@ -1,0 +1,11 @@
+{
+  "id": "CS-004",
+  "product": "RS Cheat Sheets & Tips",
+  "allowed_platforms": ["x", "facebook"],
+  "post_format": "video",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/BACKGROUND.mp4",
+  "caption": "3 formatting rules that instantly improve AI reasoning. Use Markdown and strict delimiters.",
+  "platform_captions": {
+    "x": "3 formatting rules that instantly improve AI reasoning: \n\n1. Markdown structures\n2. Strict XML delimiters\n3. Zero-inference instructions\n\nWatch how it works. 💀⚡\n\nhttps://revenantsystems.net"
+  }
+}

@@ -1,14 +1,19 @@
 {
   "id": "RTS-001",
-  "title": "PLACEHOLDER - Replace before approving",
   "product": "Revenant Theme Studio",
-  "approved": true,
-  "caption": "PLACEHOLDER caption. Write real human-approved copy before flipping approved to true.",
-  "platform_captions": {},
-  "media_path": "ads/rts/RTS-001/media.png",
-  "url": "https://revenantsystems.net/software",
-  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
-  "target_subreddits": ["r/gamedev", "r/indiegaming", "r/rpg"],
-  "post_format": "image",
-  "notes": "Stub for engine testing. Not a real ad."
+  "allowed_platforms": [
+    "tiktok",
+    "x",
+    "linkedin",
+    "facebook",
+    "pinterest"
+  ],
+  "post_format": "video",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/auto-match.mp4",
+  "caption": "Stop manually binding icons like it's 2005. Theme Studio auto-matches your entire library in seconds.",
+  "platform_captions": {
+    "tiktok": "Stop manually binding icons like it's 2005. 💀 Theme Studio auto-matches your library in seconds. Upgrade your setup. #gamedevelopment #indiegamedev #gamedev #developer #setup #theme",
+    "x": "Stop manually binding icons like it's 2005. 💀\n\nRevenant Theme Studio maps your entire library in seconds.\n\nhttps://revenantsystems.net/software",
+    "linkedin": "Stop manually binding icons like it's 2005. \n\nRevenant Theme Studio uses intelligent auto-matching to map your entire visual library in seconds, transforming tedious asset management into a background task. Build beautiful interfaces without the manual labor.\n\nLearn more: https://revenantsystems.net/software"
+  }
 }

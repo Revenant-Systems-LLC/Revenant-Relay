@@ -1,0 +1,17 @@
+{
+  "id": "SEC-001",
+  "title": "RS Security & Red Team Skill Pack",
+  "product": "RS Security & Red Team Pack",
+  "approved": true,
+  "caption": "Equip your AI developers and agents with professional red-teaming capabilities. 14 advanced security skills for cloud, AD, and binary testing: https://revenantsystems.net",
+  "platform_captions": {
+    "linkedin": "Build secure agents, or train them to break systems. The RS Security & Red Team pack equips your Claude or OpenClaw agents with 14 expert skills, including API fuzzing, active directory attacks, anti-reversing, and cloud-penetration workflows: https://revenantsystems.net",
+    "x": "Red-team your systems using autonomous agents. 🛡️💀\n\n14 security skills covering API fuzzing, Active Directory attacks, Cloud pentesting, and binary analysis.\n\nhttps://revenantsystems.net"
+  },
+  "media_path": "ads/skills/SEC-001/media.png",
+  "url": "https://www.revenantsystems.net",
+  "allowed_platforms": ["x", "linkedin", "facebook", "pinterest", "reddit"],
+  "target_subreddits": ["r/netsec", "r/redteamsec", "r/cybersecurity", "r/bugbounty"],
+  "post_format": "image",
+  "notes": "Security & Red Team pack ad using SR_GOLD.png."
+}

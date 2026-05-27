@@ -1,0 +1,11 @@
+{
+  "id": "BUN-005",
+  "product": "RS Full Bundle",
+  "allowed_platforms": ["x"],
+  "post_format": "text",
+  "media_path": null,
+  "caption": "How to force logical processing in Claude. Thread pitche.",
+  "platform_captions": {
+    "x": "How to force logical processing in Claude. 🧵👇\n\nStop writing essays. Structure your prompt with distinct XML delimiters, enforce a dry-run draft phase in memory, and restrict output formats. Here is the exact blueprint. [Thread]\n\nhttps://revenantsystems.net"
+  }
+}

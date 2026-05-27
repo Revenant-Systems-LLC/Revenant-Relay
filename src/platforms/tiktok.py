@@ -32,7 +32,7 @@ _ERROR_FIX = {
     "RATE_LIMIT_ERROR": "Wait before retrying and reduce posting frequency.",
 }
 
-_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+_TRANSIENT_TYPES = {"NETWORK_ERROR"}
 
 
 def _resolve_media(media_path):

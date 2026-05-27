@@ -37,7 +37,7 @@ _ERROR_FIX = {
     "UNKNOWN_ERROR": "Investigate manually.",
 }
 
-_TRANSIENT_TYPES = {"NETWORK_ERROR", "RATE_LIMIT_ERROR"}
+_TRANSIENT_TYPES = {"NETWORK_ERROR"}
 
 
 def _result(success, post_url=None, error_type=None, detected=None, raw=None):
@@ -55,11 +55,12 @@ def _result(success, post_url=None, error_type=None, detected=None, raw=None):
 
 
 class RedditAdapter:
-    def __init__(self, reddit_config):
+    def __init__(self, reddit_config, settings=None):
         """
         reddit_config: dict from settings["reddit"] with env var names.
         Raises RuntimeError if PRAW not installed or credentials missing.
         """
+        self.settings = settings or {}
         if not PRAW_AVAILABLE:
             raise RuntimeError(
                 "praw is not installed. Run: pip install praw"
@@ -129,7 +130,7 @@ class RedditAdapter:
         title = caption[:300]  # Reddit title limit
 
         try:
-            sub = self._reddit.subreddit(subreddit.lstrip("r/"))
+            sub = self._reddit.subreddit(subreddit.removeprefix("r/"))
 
             if post_format == "image":
                 media_path = ad.get("media_path", "")
@@ -147,10 +148,68 @@ class RedditAdapter:
                 submission = sub.submit(title=title, url=url)
 
             post_url = f"https://www.reddit.com{submission.permalink}"
+
+            # Passive Lead Scout Sweep
+            try:
+                if self.settings.get("lead_scout", {}).get("enabled", True):
+                    from ..scout_logger import log_leads
+                    leads = self.scout_leads(self.settings)
+                    log_leads(leads)
+            except Exception as e:
+                print(f"[Reddit Scout] Error running Lead Scout: {e}")
+
             return _result(True, post_url=post_url)
 
         except Exception as e:
             return _classify_error(e)
+
+    def scout_leads(self, settings):
+        """
+        Scan Reddit globally for keywords defined in settings.
+        Returns a list of discovered lead dictionaries.
+        """
+        scout_cfg = settings.get("lead_scout", {})
+        if not scout_cfg.get("enabled", True):
+            return []
+
+        keywords = scout_cfg.get("keywords", [])
+        limit = scout_cfg.get("max_leads_per_run", 5)
+        leads = []
+
+        print(f"[Reddit Scout] Starting passive sweep for {len(keywords)} keywords...")
+        try:
+            our_name = ""
+            try:
+                our_name = self._reddit.user.me().name
+            except Exception:
+                pass
+
+            for kw in keywords:
+                results = self._reddit.subreddit("all").search(
+                    query=kw,
+                    limit=limit,
+                    sort="new",
+                    syntax="plain"
+                )
+                for submission in results:
+                    author = str(submission.author) if submission.author else "[deleted]"
+                    if our_name and author.lower() == our_name.lower():
+                        continue
+                    
+                    content = submission.selftext[:500] if submission.is_self else f"[Link/Media Title: {submission.title}]"
+                    permalink = f"https://www.reddit.com{submission.permalink}"
+                    
+                    leads.append({
+                        "platform": "reddit",
+                        "keyword": kw,
+                        "author": author,
+                        "post_content": content,
+                        "post_url": permalink
+                    })
+        except Exception as e:
+            print(f"[Reddit Scout] Warning: Passive sweep encountered an issue: {e}")
+        
+        return leads
 
 
 def _classify_error(exc):

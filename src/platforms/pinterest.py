@@ -82,13 +82,29 @@ class PinterestAdapter:
         self.dev_mode = mode == "dev"
 
     def post_ad(self, ad, caption):
-        media_path = ad.get("media_path")
-        if not media_path:
-            return _result(False, error_type="MEDIA_ERROR", detected="Ad missing media_path", raw="missing_media_path")
-
-        resolved = _resolve_media(media_path)
-        if not resolved.exists():
-            return _result(False, error_type="MEDIA_ERROR", detected=f"Media file not found: {media_path}", raw=str(resolved))
+        media_files = []
+        paths = ad.get("media_paths", [])
+        if ad.get("media_path"):
+            paths.insert(0, ad["media_path"])
+            
+        for path_str in paths:
+            m_file = _resolve_media(path_str)
+            if not m_file.exists() or not m_file.is_file():
+                return _result(
+                    False,
+                    error_type="MEDIA_ERROR",
+                    detected=f"Media file not found: {path_str}",
+                    raw=str(m_file),
+                )
+            media_files.append(str(m_file))
+            
+        if not media_files:
+            return _result(
+                False,
+                error_type="MEDIA_ERROR",
+                detected="No media files provided for Pin",
+                raw="missing_media_path",
+            )
 
         title = (ad.get("title") or caption or "").strip()
         description = (caption or "").strip()
@@ -111,7 +127,7 @@ class PinterestAdapter:
                     print("[PinterestAdapter] Running in dev mode with visible browser.")
 
                 self._login(page)
-                post_url = self._create_pin(page, str(resolved), title, description, destination_url)
+                post_url = self._create_pin(page, media_files[0], title, description, destination_url)
 
                 return _result(True, post_url=post_url)
         except Exception as e:

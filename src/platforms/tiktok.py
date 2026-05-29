@@ -85,29 +85,32 @@ class TikTokAdapter:
         self.headless = mode_settings.get("headless", mode == "scheduled")
 
     def post_ad(self, ad, caption):
-        media_path = ad.get("media_path")
-        if not media_path:
-            return _result(False, error_type="MEDIA_ERROR", detected="Ad missing media_path", raw="missing_media_path")
-
-        resolved = _resolve_media(media_path)
-        if not resolved.exists() or not resolved.is_file():
-            return _result(False, error_type="MEDIA_ERROR", detected=f"Media file not found: {media_path}", raw=str(resolved))
-
-        if not _is_supported_media(resolved):
+        media_files = []
+        paths = ad.get("media_paths", [])
+        if ad.get("media_path"):
+            paths.insert(0, ad["media_path"])
+            
+        for path_str in paths:
+            m_file = _resolve_media(path_str)
+            if not m_file.exists() or not m_file.is_file():
+                return _result(
+                    False,
+                    error_type="MEDIA_ERROR",
+                    detected=f"Media file not found: {path_str}",
+                    raw=str(m_file),
+                )
+            if _is_supported_media(m_file) and m_file.suffix.lower() in _VIDEO_EXTS:
+                media_files.append(m_file)
+                
+        if not media_files:
             return _result(
                 False,
                 error_type="MEDIA_ERROR",
-                detected=f"Unsupported media extension for TikTok: {resolved.suffix}",
-                raw=str(resolved),
+                detected="TikTok adapter requires video media; no valid video assets were provided in media_paths.",
+                raw="missing_video_media",
             )
-
-        if resolved.suffix.lower() not in _VIDEO_EXTS:
-            return _result(
-                False,
-                error_type="MEDIA_ERROR",
-                detected="TikTok adapter requires video media; image-only assets are not attempted.",
-                raw=f"unsupported_for_tiktok:{resolved.suffix.lower()}",
-            )
+            
+        resolved = media_files[0]
 
         if not self.enable_automation:
             return _result(

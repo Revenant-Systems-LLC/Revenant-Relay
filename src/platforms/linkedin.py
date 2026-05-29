@@ -99,17 +99,21 @@ class LinkedInAdapter:
         if caption is None:
             caption = ""
 
-        media_path = ad.get("media_path")
-        resolved_media = None
-        if media_path:
-            resolved_media = _resolve_media(media_path)
-            if not resolved_media.exists() or not resolved_media.is_file():
+        media_files = []
+        paths = ad.get("media_paths", [])
+        if ad.get("media_path"):
+            paths.insert(0, ad["media_path"])
+            
+        for path_str in paths:
+            m_file = _resolve_media(path_str)
+            if not m_file.exists() or not m_file.is_file():
                 return _result(
                     False,
                     error_type="MEDIA_ERROR",
-                    detected=f"Media file not found: {media_path}",
-                    raw=str(resolved_media),
+                    detected=f"Media file not found: {path_str}",
+                    raw=str(m_file),
                 )
+            media_files.append(str(m_file))
 
         browser = None
         context = None
@@ -140,7 +144,7 @@ class LinkedInAdapter:
                     caption_gate["screenshot_path"] = self._capture_screenshot(page)
                     return _result(**caption_gate)
 
-                media_gate = self._attach_media_if_any(page, resolved_media)
+                media_gate = self._attach_media_if_any(page, media_files)
                 if media_gate:
                     media_gate["screenshot_path"] = self._capture_screenshot(page)
                     return _result(**media_gate)
@@ -363,8 +367,8 @@ class LinkedInAdapter:
         textbox.fill(caption)
         return None
 
-    def _attach_media_if_any(self, page, resolved_media):
-        if not resolved_media:
+    def _attach_media_if_any(self, page, media_files):
+        if not media_files:
             return None
         file_input = page.locator('input[type="file"]').first
         if file_input.count() == 0:
@@ -385,7 +389,7 @@ class LinkedInAdapter:
                 "post_url": None,
             }
 
-        file_input.set_input_files(str(resolved_media))
+        file_input.set_input_files(media_files)
         page.wait_for_timeout(4000)
         body = page.content().lower()
         if "couldn't upload" in body or "failed to upload" in body or "unsupported" in body:

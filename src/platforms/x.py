@@ -98,23 +98,28 @@ class XAdapter:
                 raw=f"caption_len={len(caption)}",
             )
 
-        media_file = None
+        media_files = []
+        paths = ad.get("media_paths", [])
         if ad.get("media_path"):
-            media_file = _resolve_media(ad["media_path"])
-            if not media_file.exists() or not media_file.is_file():
+            paths.insert(0, ad["media_path"])
+            
+        for path_str in paths:
+            m_file = _resolve_media(path_str)
+            if not m_file.exists() or not m_file.is_file():
                 return _result(
                     False,
                     error_type="MEDIA_ERROR",
-                    detected=f"Media file not found: {ad['media_path']}",
-                    raw=str(media_file),
+                    detected=f"Media file not found: {path_str}",
+                    raw=str(m_file),
                 )
-            if media_file.suffix.lower() not in _SUPPORTED_MEDIA_EXTS:
+            if m_file.suffix.lower() not in _SUPPORTED_MEDIA_EXTS:
                 return _result(
                     False,
                     error_type="MEDIA_ERROR",
-                    detected=f"Unsupported media extension for X: {media_file.suffix}",
-                    raw=str(media_file),
+                    detected=f"Unsupported media extension for X: {m_file.suffix}",
+                    raw=str(m_file),
                 )
+            media_files.append(str(m_file))
 
         browser = None
         context = None
@@ -140,8 +145,8 @@ class XAdapter:
                     fill_error["screenshot_path"] = self._capture_screenshot(page)
                     return _result(**fill_error)
 
-                if media_file:
-                    media_error = self._attach_media(page, str(media_file))
+                if media_files:
+                    media_error = self._attach_media(page, media_files)
                     if media_error:
                         media_error["screenshot_path"] = self._capture_screenshot(page)
                         return _result(**media_error)
@@ -363,7 +368,7 @@ class XAdapter:
             }
         return None
 
-    def _attach_media(self, page, media_file):
+    def _attach_media(self, page, media_files):
         file_input = page.locator('input[data-testid="fileInput"], input[type="file"]').first
         if file_input.count() == 0:
             return {
@@ -374,7 +379,7 @@ class XAdapter:
                 "post_url": None,
             }
 
-        file_input.set_input_files(media_file)
+        file_input.set_input_files(media_files)
         page.wait_for_timeout(5000)
 
         upload_error_markers = [

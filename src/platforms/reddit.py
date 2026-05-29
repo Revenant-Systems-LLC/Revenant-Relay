@@ -133,16 +133,35 @@ class RedditAdapter:
             sub = self._reddit.subreddit(subreddit.removeprefix("r/"))
 
             if post_format == "image":
-                media_path = ad.get("media_path", "")
-                resolved = _resolve_media(media_path) if media_path else None
-                if not resolved or not resolved.exists():
+                media_files = []
+                paths = ad.get("media_paths", [])
+                if ad.get("media_path"):
+                    paths.insert(0, ad["media_path"])
+                    
+                for path_str in paths:
+                    resolved = _resolve_media(path_str)
+                    if not resolved or not resolved.exists():
+                        return _result(
+                            False,
+                            error_type="MEDIA_ERROR",
+                            detected=f"Media file not found: {path_str}",
+                            raw=f"FileNotFoundError: {path_str}",
+                        )
+                    media_files.append(str(resolved))
+                
+                if not media_files:
                     return _result(
                         False,
                         error_type="MEDIA_ERROR",
-                        detected=f"Media file not found: {media_path}",
-                        raw=f"FileNotFoundError: {media_path}",
+                        detected="No media files provided for image post format.",
+                        raw="NoMediaError",
                     )
-                submission = sub.submit_image(title=title, image_path=str(resolved))
+                
+                if len(media_files) == 1:
+                    submission = sub.submit_image(title=title, image_path=media_files[0])
+                else:
+                    gallery_images = [{"image_path": path} for path in media_files]
+                    submission = sub.submit_gallery(title=title, images=gallery_images)
             else:
                 url = ad.get("url", "")
                 submission = sub.submit(title=title, url=url)

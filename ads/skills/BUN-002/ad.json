@@ -1,11 +1,16 @@
 {
   "id": "BUN-002",
   "product": "RS Full Bundle",
-  "allowed_platforms": ["linkedin", "x", "facebook"],
+  "allowed_platforms": [
+    "linkedin",
+    "x",
+    "facebook"
+  ],
   "post_format": "image",
-  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/CYBORG_GOLD.png",
-  "caption": "Claude is a scalpel. You're using it like a hammer. Learn advanced artifact manipulation.",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/RSAgents_TRIO.png",
+  "caption": "REVENANT BUNDLE // ARTIFACT MANIPULATION\n\nClaude is a scalpel. You're using it like a hammer.\n\nMost developers write essays in the prompt box and expect production-ready codebase files.\n\nTo get actual, deterministic outputs, you need advanced artifact manipulation and strict delimiter control. \n\nSteal this exact prompt engineering skill for free, and unlock the other 9 in our bundle.\n\n          \u00ac_\u00ac   Stop prompting. Start compiling.\n\nDavid Fisher | Founder | Revenant Systems\nDave\u233d\u1da0\u209c\u2095\u2091Dead | AI Engineering Student | AI Alignment\nhttps://www.revenantsystems.net/\nhttps://www.linkedin.com/in/daveisfromthegrave/",
   "platform_captions": {
-    "linkedin": "Claude is a scalpel. You're using it like a hammer.\n\nMost developers write simple prompts and expect complex code. To get actual production-ready results, you need advanced artifact manipulation and strict delimiter control. Steal this exact skill for free, and unlock the other 9 in our bundle.\n\nGet the bundle: https://revenantsystems.net"
+    "linkedin": "Claude is a scalpel. You're using it like a hammer.\n\nMost developers write simple prompts and expect complex code. To get actual production-ready results, you need advanced artifact manipulation and strict delimiter control. Steal this exact skill for free, and unlock the other 9 in our bundle.\n\nGet the bundle: https://revenantsystems.net",
+    "x": "Claude is a scalpel. You're using it like a hammer. \ud83d\udc80\n\nStop typing essays. Structure your prompts with strict delimiters and force logic stages. \n\n\u00ac_\u00ac  Unlock the 10 production-ready skills: https://www.revenantsystems.net"
   }
 }

@@ -99,17 +99,21 @@ class BlueskyAdapter:
                 raw="empty_text"
             )
 
-        media_path = ad.get("media_path")
-        resolved = None
-        if media_path:
-            resolved = _resolve_media(media_path)
-            if not resolved.exists() or not resolved.is_file():
+        media_files = []
+        paths = ad.get("media_paths", [])
+        if ad.get("media_path"):
+            paths.insert(0, ad["media_path"])
+            
+        for path_str in paths:
+            m_file = _resolve_media(path_str)
+            if not m_file.exists() or not m_file.is_file():
                 return _result(
                     False,
                     error_type="MEDIA_ERROR",
-                    detected=f"Media file not found: {media_path}",
-                    raw=str(resolved)
+                    detected=f"Media file not found: {path_str}",
+                    raw=str(m_file)
                 )
+            media_files.append(m_file)
 
         try:
             # 1. Create AT Protocol Session
@@ -117,19 +121,22 @@ class BlueskyAdapter:
             access_token = session["accessJwt"]
             did = session["did"]
 
-            # 2. Upload image blob if present
+            # 2. Upload image blobs if present
             embed = None
-            if resolved:
-                blob = self._upload_blob(access_token, resolved)
-                embed = {
-                    "$type": "app.bsky.embed.images",
-                    "images": [
-                        {
-                            "alt": ad.get("title") or "Revenant Systems Ad",
-                            "image": blob
-                        }
-                    ]
-                }
+            if media_files:
+                images_list = []
+                for idx, resolved_path in enumerate(media_files[:4]):  # Bluesky standard limit is 4 images
+                    blob = self._upload_blob(access_token, resolved_path)
+                    images_list.append({
+                        "alt": f"{ad.get('title') or 'Revenant Systems Ad'} - Part {idx+1}",
+                        "image": blob
+                    })
+                
+                if images_list:
+                    embed = {
+                        "$type": "app.bsky.embed.images",
+                        "images": images_list
+                    }
 
             # 3. Create post record
             post_url = self._create_record(access_token, did, text, embed)

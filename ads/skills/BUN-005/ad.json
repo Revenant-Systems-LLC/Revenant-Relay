@@ -1,11 +1,13 @@
 {
   "id": "BUN-005",
   "product": "RS Full Bundle",
-  "allowed_platforms": ["x"],
-  "post_format": "text",
-  "media_path": null,
-  "caption": "How to force logical processing in Claude. Thread pitche.",
+  "allowed_platforms": [
+    "x"
+  ],
+  "post_format": "image",
+  "media_path": "C:/The-Ossuary/Revenant-Systems/Branding-Marketing/revenantsystems-net/assets/RSLLC_Quote1.png",
+  "caption": "REVENANT BUNDLE // LOGICAL PROCESS FLOODING\n\nIf you aren't restricting output formats, enforcing a dry-run stage in memory, and isolating parameters, your agent is just guessing.\n\nHere is the step-by-step XML blueprint to force Claude to build logical reasoning steps before writing a single line of code.\n\n          \u00af\\_(\u30c4)_/\u00af   Or you can keep debugging hallucinations.\n\nDavid Fisher | Founder | Revenant Systems\nDave\u233d\u1da0\u209c\u2095\u2091Dead | AI Engineering Student | AI Alignment\nhttps://www.revenantsystems.net/\nhttps://www.linkedin.com/in/daveisfromthegrave/",
   "platform_captions": {
-    "x": "How to force logical processing in Claude. 🧵👇\n\nStop writing essays. Structure your prompt with distinct XML delimiters, enforce a dry-run draft phase in memory, and restrict output formats. Here is the exact blueprint. [Thread]\n\nhttps://revenantsystems.net"
+    "x": "How to force logical processing in Claude. \ud83e\uddf5\ud83d\udc47\n\nStop reading essays. Structure prompts with XML delimiters, enforce a dry-run stage, and target zero-inference. [Thread]\n\n\u00af\\_(\u30c4)_/\u00af  Blueprint: https://www.revenantsystems.net"
   }
 }

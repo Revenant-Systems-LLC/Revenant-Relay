@@ -1,6 +1,9 @@
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 try:
     from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
@@ -207,12 +210,12 @@ class XAdapter:
                 try:
                     context.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser context during cleanup", exc_info=True)
             if browser is not None:
                 try:
                     browser.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser during cleanup", exc_info=True)
 
     def scout_leads(self, page, settings):
         """

@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import mimetypes
@@ -5,6 +6,8 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 _BLUESKY_MAX_CHARS = 300
 
@@ -229,7 +232,7 @@ class BlueskyAdapter:
         try:
             err_str = e.read().decode("utf-8", errors="ignore")
         except Exception:
-            pass
+            logger.debug("Could not read HTTP error body", exc_info=True)
 
         # Disambiguate AT Protocol specific codes
         if status in (401, 403):

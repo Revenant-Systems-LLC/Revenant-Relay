@@ -1,6 +1,9 @@
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 try:
     from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
@@ -166,12 +169,12 @@ class SnapchatAdapter:
                 try:
                     context.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser context during cleanup", exc_info=True)
             if browser is not None:
                 try:
                     browser.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser during cleanup", exc_info=True)
 
     def _open_and_auth(self, page):
         page.goto(self.business_url, wait_until="domcontentloaded", timeout=60000)
@@ -205,7 +208,7 @@ class SnapchatAdapter:
             try:
                 page.goto("https://accounts.snapchat.com/accounts/login", wait_until="domcontentloaded", timeout=60000)
             except Exception:
-                pass
+                logger.debug("Failed to navigate to Snapchat login page", exc_info=True)
 
         user_inputs = [
             'input[name="username"]',

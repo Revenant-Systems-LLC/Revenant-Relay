@@ -1,6 +1,9 @@
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 try:
     from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
@@ -139,12 +142,12 @@ class PinterestAdapter:
                 try:
                     context.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser context during cleanup", exc_info=True)
             if browser is not None:
                 try:
                     browser.close()
                 except Exception:
-                    pass
+                    logger.debug("Failed to close browser during cleanup", exc_info=True)
 
     def _login(self, page):
         page.goto("https://www.pinterest.com/login/", wait_until="domcontentloaded", timeout=60000)

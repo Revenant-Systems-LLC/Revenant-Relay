@@ -1,6 +1,9 @@
+import logging
 import os
 import random
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 try:
     import praw
@@ -201,7 +204,7 @@ class RedditAdapter:
             try:
                 our_name = self._reddit.user.me().name
             except Exception:
-                pass
+                logger.debug("Could not fetch Reddit username for dedup check", exc_info=True)
 
             for kw in keywords:
                 results = self._reddit.subreddit("all").search(

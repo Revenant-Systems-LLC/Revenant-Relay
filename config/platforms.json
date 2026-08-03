@@ -55,10 +55,10 @@
       "notes": "Business/Ads Manager flow only; personal story posting is not reliably web-automatable."
     },
     "bluesky": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "bluesky",
       "simulated_success_rate": 0.95,
-      "notes": "Decentralized social app. Uses stable open API with zero anti-bot friction."
+      "notes": "DISABLED 2026-08-03 by Dave: no Bluesky account exists. Adapter is written and works via the open AT Protocol API if an account is ever created."
     }
   }
 }

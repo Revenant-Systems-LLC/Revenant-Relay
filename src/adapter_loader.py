@@ -53,4 +53,18 @@ def load_adapter(platform, settings):
         except Exception as e:
             print(f"[Adapter] Bluesky unavailable: {e}. Falling back to simulator.")
             return None
+    if platform == "facebook":
+        try:
+            from .platforms.facebook import FacebookAdapter
+            return FacebookAdapter(settings.get("facebook", {}), settings)
+        except Exception as e:
+            print(f"[Adapter] Facebook unavailable: {e}. Falling back to simulator.")
+            return None
+    if platform == "instagram":
+        try:
+            from .platforms.instagram import InstagramAdapter
+            return InstagramAdapter(settings.get("instagram", {}), settings)
+        except Exception as e:
+            print(f"[Adapter] Instagram unavailable: {e}. Falling back to simulator.")
+            return None
     return None

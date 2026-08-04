@@ -37,3 +37,11 @@ screenshots/
 .DS_Store
 Thumbs.db
 AGENTS.md
+
+# --- secret + artifact baseline (Nomos Part VI), added 2026-08-04 ---
+**/secrets/**
+**/keys/**
+*.key
+*.pem
+config.local.*
+

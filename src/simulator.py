@@ -44,6 +44,7 @@ def simulate_post(platform, ad):
             "post_url": f"https://{platform}.example/simulated/{ad['id']}",
             "screenshot_path": None,
             "transient": False,
+            "simulated": True,
         }
 
     transient = random.random() < 0.25
@@ -59,6 +60,7 @@ def simulate_post(platform, ad):
         "post_url": None,
         "screenshot_path": None,
         "transient": transient,
+        "simulated": True,
     }
 
 

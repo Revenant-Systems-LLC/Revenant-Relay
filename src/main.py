@@ -124,6 +124,30 @@ def run(mode):
                 result = adapter.post_ad(ad, caption, subreddit)
             else:
                 result = adapter.post_ad(ad, caption)
+        elif mode == "scheduled":
+            # Production never fabricates a success. If the adapter cannot load
+            # — missing dependency, missing credentials, no adapter at all —
+            # that is a real failure and must be reported as one. Simulating
+            # here is what let a run email "COMPLETE - 3/3 Posted" while
+            # nothing had been posted.
+            result = {
+                "success": False,
+                "error_type": "ADAPTER_UNAVAILABLE",
+                "detected_issue": f"No usable adapter loaded for {platform}.",
+                "likely_cause": (
+                    "Adapter module missing, a dependency is not installed, or the "
+                    "platform's credentials are absent from the secret store."
+                ),
+                "suggested_fix": (
+                    f"Install the adapter's dependencies and set the RR_{platform.upper()}_* "
+                    f"credentials, or set {platform} to enabled=false in config/platforms.json."
+                ),
+                "raw_error": f"ADAPTER_UNAVAILABLE::{platform}",
+                "post_url": None,
+                "screenshot_path": None,
+                "transient": False,
+                "simulated": False,
+            }
         else:
             result = simulate_post(platform, ad)
 
@@ -142,6 +166,7 @@ def run(mode):
             "raw_error": result["raw_error"],
             "post_url": result["post_url"],
             "screenshot_path": result["screenshot_path"],
+            "simulated": bool(result.get("simulated", False)),
         }
         run_log["attempts"].append(attempt)
 
@@ -149,6 +174,12 @@ def run(mode):
             run_log["successes"] += 1
             consecutive_failures = 0
             used_today.add(platform)
+            if attempt["simulated"]:
+                # A simulated post must never write production state. Cooldowns
+                # would block a real ad for a week over a post that never
+                # happened, and history drives tomorrow's tier selection.
+                run_log["simulated_successes"] = run_log.get("simulated_successes", 0) + 1
+                continue
             if subreddit is not None:
                 expires = add_reddit_cooldown(subreddit, ad["id"], days=cooldown_days)
                 cooldowns.setdefault("reddit", {}).setdefault(subreddit, {})[ad["id"]] = expires

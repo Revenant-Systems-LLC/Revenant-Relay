@@ -6,6 +6,7 @@
 - [x] Fixed `_load_disabled()` key mismatch
 - [x] Created `src/adapter_loader.py` — dispatches to real adapter or falls back to simulator
 - [x] Created `src/secret_loader.py` — loads `B:\secrets\revenant-relay.env` at startup
+      *(2026-08-06: that drive was replaced; secrets now live at `A:\env\revenant-relay.dpapi`)*
 - [x] Updated `src/main.py` — adapter dispatch, Reddit subreddit selection, `add_reddit_cooldown` on success
 - [x] Updated `config/settings.json` — `RR_` prefix env vars, credential blocks for all platforms
 - [x] Fixed `src/platforms/reddit.py` — media_path resolves relative to ROOT; supports refresh_token OR username/password auth
@@ -28,7 +29,11 @@
 ### Pending
 - [ ] Clear test cooldowns (`data/platform_cooldowns.json`) to unblock ad/platform combinations for testing
 - [ ] Create real ads (RTS-001/002 are placeholders)
-- [ ] Populate `B:\secrets\revenant-relay.env` with credentials
+- [ ] Populate `A:\env\revenant-relay.dpapi` with REAL credentials — the file exists and
+      has all 16 keys, but `RR_REDDIT_CLIENT_ID`, `RR_REDDIT_CLIENT_SECRET` and
+      `RR_REDDIT_REFRESH_TOKEN` are still placeholder values. Get the client ID and
+      secret from https://www.reddit.com/prefs/apps (app "Revenant Relay"). Username
+      and password are already real, so refresh_token is not required.
 - [ ] Test each adapter with real credentials in dev mode
 
 ### Remaining Platforms

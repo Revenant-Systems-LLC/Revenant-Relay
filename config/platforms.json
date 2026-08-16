@@ -1,16 +1,16 @@
 {
   "platforms": {
     "linkedin": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "linkedin",
       "simulated_success_rate": 0.85,
-      "notes": "Recommended first real adapter. Lower anti-bot friction than visual platforms."
+      "notes": "DISABLED 2026-08-06: Playwright adapter drives a logged-in session, prohibited by User Agreement 8.2.13. Re-enable only after the adapter is rewritten to the official Posts API (w_member_social / w_organization_social)."
     },
     "x": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "x",
       "simulated_success_rate": 0.8,
-      "notes": "Recommended second adapter."
+      "notes": "DISABLED 2026-08-06: Playwright adapter is off-API. Re-enable after rewrite to X API v2 POST /2/tweets. Pay-per-use."
     },
     "facebook": {
       "enabled": true,
@@ -31,28 +31,22 @@
       "notes": "Subreddit rules vary wildly. Risk of bans for promotional content."
     },
     "pinterest": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "pinterest",
       "simulated_success_rate": 0.75,
-      "notes": "Visual platform. Image required."
+      "notes": "DISABLED 2026-08-06: Playwright adapter is off-API, and API v5 Trial-tier Pins are visible only to their creator. Needs Standard access."
     },
     "tiktok": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "tiktok",
       "simulated_success_rate": 0.5,
-      "notes": "Video-first. Static image ads will underperform."
-    },
-    "indeed": {
-      "enabled": true,
-      "adapter": "indeed",
-      "simulated_success_rate": 0.7,
-      "notes": "Job board. Different format from social. May need separate ad pool."
+      "notes": "DISABLED 2026-08-06: Playwright adapter is off-API. Content Posting API restricts unaudited clients to private viewing. Video-first."
     },
     "snapchat": {
-      "enabled": true,
+      "enabled": false,
       "adapter": "snapchat",
       "simulated_success_rate": 0.45,
-      "notes": "Business/Ads Manager flow only; personal story posting is not reliably web-automatable."
+      "notes": "DISABLED 2026-08-06: Playwright adapter is off-API. Public Profile API requires a Public Profile and .mp4 6-60s at min 540x960."
     },
     "bluesky": {
       "enabled": false,

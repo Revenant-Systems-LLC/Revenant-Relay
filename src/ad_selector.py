@@ -16,6 +16,13 @@ def select_ad_for_platform(platform, tier_label, cooldown_buckets):
     blocked = ads_in_cooldown(cooldown_buckets, platform)
     eligible = [a for a in pool if a["id"] not in blocked]
 
+    if platform == "reddit":
+        # An ad with no target_subreddits makes RedditAdapter.select_subreddit
+        # return None, and main.py then drops Reddit for the whole run without
+        # writing an attempt record — one bad ad silently kills the channel for
+        # the day. Treat "nowhere to post it" as "not eligible" instead.
+        eligible = [a for a in eligible if a.get("target_subreddits")]
+
     if tier_label == "tier3a":
         yesterday_ad = successful_ad_on_platform_yesterday(platform)
         if yesterday_ad:

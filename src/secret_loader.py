@@ -2,8 +2,11 @@ import os
 import warnings
 from pathlib import Path
 
-# rws-suppress: RWS-PY-011 B:\secrets is intentional default; overridden by RR_SECRETS_FILE env var; fails silently if absent
-_DEFAULT_SECRETS_DIR = Path(r"B:\secrets")
+# rws-suppress: RWS-PY-011 A:\env is intentional default; overridden by RR_SECRETS_FILE env var; fails silently if absent
+# 2026-08-06: was B:\secrets, which stopped existing when that drive was replaced
+# and the secrets moved to A:\env under DPAPI. The old path silently found nothing,
+# so every adapter fell through to the simulator and reported success for months.
+_DEFAULT_SECRETS_DIR = Path(r"A:\env")
 _DEFAULT_DPAPI_FILE = _DEFAULT_SECRETS_DIR / "revenant-relay.dpapi"
 _DEFAULT_PLAINTEXT_FILE = _DEFAULT_SECRETS_DIR / "revenant-relay.env"
 _SECRETS_ENV_VAR = "RR_SECRETS_FILE"
@@ -44,12 +47,12 @@ def _load_dpapi_file(path: Path) -> None:
 
 def load_secrets() -> None:
     """
-    Load secrets from B:\\secrets into os.environ.
+    Load secrets from A:\\env into os.environ.
 
     Priority:
       1. RR_SECRETS_FILE if set (.dpapi or .env)
-      2. B:\\secrets\\revenant-relay.dpapi
-      3. B:\\secrets\\revenant-relay.env (plaintext fallback only)
+      2. A:\\env\\revenant-relay.dpapi
+      3. A:\\env\\revenant-relay.env (plaintext fallback only)
 
     Fails silently if nothing exists — adapters fall back to the simulator.
     """
@@ -69,7 +72,7 @@ def load_secrets() -> None:
                 return
             warnings.warn(
                 f"Loading plaintext secrets from {secrets_file}. "
-                "Encrypt with B:\\tools\\dpapi\\migrate_b_drive.py",
+                "Encrypt it to a .dpapi container beside it instead.",
                 stacklevel=2,
             )
             _load_plaintext_env(secrets_file)

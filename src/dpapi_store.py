@@ -1,4 +1,4 @@
-"""Load DPAPI .dpapi secret containers from B:\\secrets."""
+"""Load DPAPI .dpapi secret containers from A:\\env."""
 
 from __future__ import annotations
 

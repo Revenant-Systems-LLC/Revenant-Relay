@@ -7,7 +7,7 @@ the login step breaks the moment a site shows a captcha or a 2FA prompt, and it
 requires keeping the password where the code can read it.
 
 This replaces all of that with a profile directory that persists between runs.
-A human logs in once (`relay_login.py`), the cookies land on disk, and every
+A human logs in once (`tools/relay_login.py`), the cookies land on disk, and every
 run afterwards is already authenticated. No password in the vault, no login
 code to break, no captcha for a bot to fail.
 

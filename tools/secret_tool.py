@@ -10,10 +10,10 @@ anyone else.
 the missing writer.
 
 Usage:
-    python secret_tool.py list                       # key names + SET/EMPTY, no values
-    python secret_tool.py show  RR_REDDIT_CLIENT_ID  # print one value
-    python secret_tool.py set   RR_REDDIT_CLIENT_ID  # prompts, input hidden
-    python secret_tool.py unset RR_SNAPCHAT_PASSWORD # delete the line entirely
+    python tools\secret_tool.py list                       # key names + SET/EMPTY, no values
+    python tools\secret_tool.py show  RR_REDDIT_CLIENT_ID  # print one value
+    python tools\secret_tool.py set   RR_REDDIT_CLIENT_ID  # prompts, input hidden
+    python tools\secret_tool.py unset RR_SNAPCHAT_PASSWORD # delete the line entirely
 
 `set` prompts rather than taking the value as an argument, so secrets never land
 in shell history. Every write backs the file up first — it holds credentials for
@@ -30,7 +30,7 @@ from datetime import datetime
 from getpass import getpass
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.dpapi_decrypt import decrypt_bytes, encrypt_bytes  # noqa: E402
 
 SECRETS = Path(r"A:\env\revenant-relay.dpapi")

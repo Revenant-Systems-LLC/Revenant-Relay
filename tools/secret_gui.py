@@ -19,7 +19,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox, ttk
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import secret_tool  # noqa: E402
 
 # Keys Relay reads, grouped for the dialog. Keys already in the vault but not

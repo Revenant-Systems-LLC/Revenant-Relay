@@ -2,7 +2,7 @@
 
 Read-only research. No code changed, no config touched, no platform contacted, nothing committed.
 
-Companion to [`RELAY-READINESS-AUDIT-2026-08-03.md`](RELAY-READINESS-AUDIT-2026-08-03.md), which covers the
+Companion to [`notes/readiness-audit-2026-08-03.md`](notes/readiness-audit-2026-08-03.md), which covers the
 ad library and the simulated-post bug. Those findings are not re-litigated here — this document answers
 one question only: **which platforms can Relay legitimately post to, and by what mechanism.**
 

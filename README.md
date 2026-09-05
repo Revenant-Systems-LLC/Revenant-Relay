@@ -3,7 +3,7 @@
 Ad distribution bot for Revenant Systems LLC.
 
 ## What it is
-Posts human-approved ads across selected social platforms on a rotating schedule. Replaces Relayed.social with a self-hosted, free, runs-on-Dave's-machine alternative.
+Posts human-approved ads across selected social platforms on a rotating schedule. A self-hosted, free replacement for a paid scheduling service. It runs on your own machine.
 
 ## What it is not
 - Not an ad generator. No AI-generated public-facing copy. Ever.
@@ -30,12 +30,16 @@ Facebook, Instagram, X, Reddit, Pinterest, TikTok, LinkedIn, Indeed.
 ## Project layout
 ```
 Revenant-Relay/
-  ads/         approved ad library (image + ad.json per ad)
+  ads/         approved ad library (image or video + ad.json per ad)
+  assets/      brand images referenced by ads
   config/      platforms.json, settings.json
-  data/        run_history.json, platform_cooldowns.json, disabled_platforms.json
-  logs/        YYYY-MM-DD/ run.json, report.txt, failures/*.png
+  data/        run_history.json, platform_cooldowns.json, disabled_platforms.json (gitignored)
+  docs/        platform permission matrix; docs/notes/ holds audits and session notes
+  logs/        YYYY-MM-DD/ run.json, report.txt, failures/*.png (gitignored)
   src/         engine code
     platforms/ one adapter per platform
+  tests/       pytest suite
+  tools/       operator scripts: manual login, credential vault, auth checks
 ```
 
 ## Status
@@ -47,9 +51,21 @@ python -m pip install -r requirements.txt
 python -m playwright install
 ```
 
+## Operator tools
+- `tools/relay_login.py <platform>` opens a real, visible browser so you log in once by hand. The session cookies stay on disk and every later run is already authenticated. `--check` tests the session, `--reset` wipes it. No adapter ever types a password.
+- `tools/secret_tool.py` reads and edits the DPAPI-encrypted credential vault without writing plaintext to disk. `tools/secret_gui.py` is the same thing with a window.
+- `tools/reddit_auth_check.py` makes one read-only Reddit call to prove the stored credentials work. Posts nothing.
 
-## Reddit adapter environment
-Set these environment variables for Reddit adapter initialization/posting:
+## Tests
+```
+python -m pytest
+```
+
+## Platform credentials
+Credentials are read from the encrypted vault or from the environment. Each adapter expects the variables below.
+
+### Reddit
+Required for Reddit adapter initialization and posting:
 - `RR_REDDIT_CLIENT_ID`
 - `RR_REDDIT_CLIENT_SECRET`
 - `RR_REDDIT_USERNAME`
@@ -57,20 +73,20 @@ Set these environment variables for Reddit adapter initialization/posting:
 - `RR_REDDIT_USER_AGENT`
 - Optional: `RR_REDDIT_REFRESH_TOKEN`
 
-## Pinterest adapter environment
-Set these environment variables for real Pinterest posting:
+### Pinterest
+Required for real Pinterest posting:
 - `RR_PINTEREST_USERNAME`
 - `RR_PINTEREST_PASSWORD`
 - Optional: `RR_PINTEREST_BOARD_NAME`
 
-## TikTok adapter environment
-Set these environment variables for TikTok adapter initialization:
+### TikTok
+Required for TikTok adapter initialization:
 - `RR_TIKTOK_USERNAME`
 - `RR_TIKTOK_PASSWORD`
 - Optional safety gate: `RR_TIKTOK_ENABLE_AUTOMATION` (default disabled; set to `true` to attempt browser automation bootstrap)
 
-## Snapchat adapter environment
-Set these environment variables for Snapchat adapter initialization:
+### Snapchat
+Required for Snapchat adapter initialization:
 - `RR_SNAPCHAT_USERNAME`
 - `RR_SNAPCHAT_PASSWORD`
 - Optional: `RR_SNAPCHAT_POST_TARGET` (destination URL used in ad composer fields when present)
@@ -78,14 +94,21 @@ Set these environment variables for Snapchat adapter initialization:
 
 The adapter targets Snapchat Ads Manager campaign creation/save/publish controls when detectable. It does **not** claim reliable personal-story posting from Snapchat web account flow.
 
-## LinkedIn adapter environment
-Set these environment variables for real LinkedIn posting:
+### LinkedIn
+Required for real LinkedIn posting:
 - `RR_LINKEDIN_USERNAME`
 - `RR_LINKEDIN_PASSWORD`
 - `RR_LINKEDIN_POST_TARGET` (`company` or `profile`; `company` recommended)
 - `RR_LINKEDIN_COMPANY_PAGE_URL` (required when target is `company`)
 
-## X adapter environment
-Set these environment variables for real X posting:
+### X
+Required for real X posting:
 - `RR_X_USERNAME`
 - `RR_X_PASSWORD`
+
+## Docs
+- [Platform permission matrix](docs/platform-permission-matrix.md): what each platform's API and terms allow for automated posting.
+- [docs/notes/](docs/notes/): readiness audit, task log, and session notes.
+
+## License
+Copyright Revenant Systems LLC. All rights reserved.

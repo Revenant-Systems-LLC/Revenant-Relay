@@ -45,3 +45,6 @@ AGENTS.md
 *.pem
 config.local.*
 
+
+# Session task logs and agent scratch (tracked history lives in docs/notes/)
+tasks/

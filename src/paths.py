@@ -7,7 +7,7 @@ DATA_DIR = ROOT / "data"
 LOGS_DIR = ROOT / "logs"
 
 # Persistent Playwright profiles, one directory per platform. These hold real
-# session cookies written by a human login (see relay_login.py), which is why
+# session cookies written by a human login (see tools/relay_login.py), which is why
 # no adapter using them needs a stored password. Deliberately NOT Dave's real
 # Opera GX profile: Playwright locks whatever profile directory it opens, so
 # pointing at a live browser profile risks corrupting it mid-run.
